@@ -24,6 +24,10 @@ public class ItemsTable {
             ListsTable.TABLE_NAME + "(" + ListsTable.C_ID + ")" +
             ");";
 
+    public static final String[] ALLOWED_COLUMNS = new String[] {
+      C_ID, C_NAME, C_PRICE, C_LIST_ID
+    };
+
     public static void onCreate(SQLiteDatabase database) {
         database.execSQL(CREATE_QUERY);
     }

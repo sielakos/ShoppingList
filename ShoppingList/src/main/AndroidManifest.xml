@@ -22,6 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="net.sledzdev.shoppinglist.provider"
+            android:name="net.sledzdev.shoppinglist.content.ShoppingListProvider">
+        </provider>
     </application>
 
 </manifest>

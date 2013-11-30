@@ -8,7 +8,7 @@ import android.net.Uri;
 /**
  * Created by Mariusz on 23.11.13.
  */
-public abstract class RowUriProvider extends DatabaseUriConentProvider {
+public abstract class RowUriProvider extends DatabaseUriContentProvider {
 
     private String tableName;
     private String columnId;
@@ -21,7 +21,9 @@ public abstract class RowUriProvider extends DatabaseUriConentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        checkProjectionAndThrowIfWrong(projection);
+        return getDatabase().query(tableName, projection, columnId + " = ?", new String[]{uri.getLastPathSegment()},
+                null, null, null);
     }
 
     @Override

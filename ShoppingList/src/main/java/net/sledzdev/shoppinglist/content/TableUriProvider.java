@@ -1,6 +1,5 @@
 package net.sledzdev.shoppinglist.content;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,7 +8,7 @@ import android.net.Uri;
 /**
  * Created by Mariusz on 23.11.13.
  */
-public abstract class TableUriProvider extends DatabaseUriConentProvider {
+public abstract class TableUriProvider extends DatabaseUriContentProvider {
 
     private String tableName;
 
@@ -20,11 +19,13 @@ public abstract class TableUriProvider extends DatabaseUriConentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        checkProjectionAndThrowIfWrong(projection);
         return getDatabase().query(tableName, projection, selection, selectionArgs, null, null, sortOrder);
     }
 
     @Override
     public Uri insert(Uri uri, ContentValues values)  {
+        //TODO: przetestowac kolumny
         long id = getDatabase().insert(tableName, null, values);
         if (id == -1) {
             throw new IllegalArgumentException("Bad values, couldn't insert row");

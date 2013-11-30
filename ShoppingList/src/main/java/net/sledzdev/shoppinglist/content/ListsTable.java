@@ -11,13 +11,15 @@ public class ListsTable {
     public static final String TABLE_NAME = "lists";
     public static final String C_ID = BaseColumns._ID;
     public static final String C_NAME = "name";
-    public static final String C_SHORTCUT = "shortcut";
 
     private static final String CREATE_QUERY = "CREATE TABLE " +
             TABLE_NAME + "(" +
             C_ID + " INTEGER PRIMARY KEY AUTOINCREAMENT, " +
-            C_NAME + " TEXT, " +
-            C_SHORTCUT + " INTEGER);";
+            C_NAME + " TEXT);";
+
+    public static final String[] ALLOWED_COLUMNS = new String[] {
+            C_ID, C_NAME
+    };
 
     public static void onCreate(SQLiteDatabase database) {
         database.execSQL(CREATE_QUERY);
