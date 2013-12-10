@@ -1,7 +1,10 @@
 package net.sledzdev.shoppinglist.content;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.Set;
 
 /**
  * Created by Mariusz on 23.11.13.
@@ -31,5 +34,10 @@ public abstract class DatabaseUriContentProvider implements UriContentProvider {
         if (projection != null && (!checkProjection(projection) || projection.length <= 0)) {
             throw new IllegalArgumentException("invalid projection argument!");
         }
+    }
+
+    protected void checkContentValues(ContentValues contentValues) {
+         String[] keys = contentValues.keySet().toArray(new String[contentValues.size()]);
+         checkProjectionAndThrowIfWrong(keys);
     }
 }

@@ -39,6 +39,7 @@ public abstract class RowUriProvider extends DatabaseUriContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        checkContentValues(values);
         return getDatabase().update(tableName, values,
                 columnId + " = ?", new String[]{uri.getLastPathSegment()});
     }

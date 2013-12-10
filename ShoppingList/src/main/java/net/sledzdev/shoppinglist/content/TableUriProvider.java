@@ -25,7 +25,7 @@ public abstract class TableUriProvider extends DatabaseUriContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values)  {
-        //TODO: przetestowac kolumny
+        checkContentValues(values);
         long id = getDatabase().insert(tableName, null, values);
         if (id == -1) {
             throw new IllegalArgumentException("Bad values, couldn't insert row");
@@ -42,6 +42,7 @@ public abstract class TableUriProvider extends DatabaseUriContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        checkContentValues(values);
         return getDatabase().update(tableName, values, selection, selectionArgs);
     }
 }

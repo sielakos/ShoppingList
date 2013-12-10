@@ -34,7 +34,7 @@ public class ShoppingListProvider extends ContentProvider {
     public boolean onCreate() {
         openHelper = new DatabaseHelper(getContext());
 
-        contentRouter = new SparseArray<>();
+        contentRouter = new SparseArray<UriContentProvider>();
         contentRouter.put(LISTS, new ListsProvider(LISTS, openHelper));
         contentRouter.put(LIST_ID, new ListRowProvider(LIST_ID, openHelper));
         contentRouter.put(ITEMS, new ItemsProvider(LIST_ID, openHelper));

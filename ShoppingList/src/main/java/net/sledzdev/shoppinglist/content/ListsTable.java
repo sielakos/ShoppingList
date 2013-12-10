@@ -14,7 +14,7 @@ public class ListsTable {
 
     private static final String CREATE_QUERY = "CREATE TABLE " +
             TABLE_NAME + "(" +
-            C_ID + " INTEGER PRIMARY KEY AUTOINCREAMENT, " +
+            C_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             C_NAME + " TEXT);";
 
     public static final String[] ALLOWED_COLUMNS = new String[] {
