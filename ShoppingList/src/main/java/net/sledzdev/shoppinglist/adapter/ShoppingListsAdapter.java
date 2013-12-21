@@ -50,6 +50,7 @@ public class ShoppingListsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        //TODO: replace mock element with true ShoppingListView and add event listeners
         TextView shoppingListView = getShoppingListView(convertView);
         shoppingListView.setText(model.getAtPosition(position).get().name);
         return shoppingListView;

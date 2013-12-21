@@ -43,14 +43,18 @@ public class ListMapDataModel<T extends ElementWithId> implements DataModel<T> {
 
     @Override
     public void addElement(T element) {
+        if (getAtId(element.getId()).isPresent()) {
+            throw new IllegalArgumentException("Element with that id already exists! " +
+                    "Remove that element before adding other with the same id!");
+        }
+
         list.add(element);
         map.put(element.getId(), element);
     }
 
     @Override
     public void removeElement(T element) {
-        list.remove(element);
-        map.remove(element.getId());
+        list.remove(map.remove(element.getId()));
     }
 
     @Override

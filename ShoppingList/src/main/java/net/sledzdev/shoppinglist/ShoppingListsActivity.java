@@ -63,7 +63,7 @@ public class ShoppingListsActivity extends FragmentActivity
             // adding or replacing the detail fragment using a
             // fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ShoppingListDetailFragment.ARG_ITEM_ID, id);
+            arguments.putString(ShoppingListDetailFragment.LIST_ID, id);
             ShoppingListDetailFragment fragment = new ShoppingListDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -74,7 +74,7 @@ public class ShoppingListsActivity extends FragmentActivity
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
             Intent detailIntent = new Intent(this, ShoppingListDetailActivity.class);
-            detailIntent.putExtra(ShoppingListDetailFragment.ARG_ITEM_ID, id);
+            detailIntent.putExtra(ShoppingListDetailFragment.LIST_ID, id);
             startActivity(detailIntent);
         }
     }

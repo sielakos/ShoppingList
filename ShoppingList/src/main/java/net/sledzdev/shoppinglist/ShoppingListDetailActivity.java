@@ -38,8 +38,8 @@ public class ShoppingListDetailActivity extends FragmentActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ShoppingListDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ShoppingListDetailFragment.ARG_ITEM_ID));
+            arguments.putString(ShoppingListDetailFragment.LIST_ID,
+                    getIntent().getStringExtra(ShoppingListDetailFragment.LIST_ID));
             ShoppingListDetailFragment fragment = new ShoppingListDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

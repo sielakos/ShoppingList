@@ -7,8 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import net.sledzdev.shoppinglist.dummy.DummyContent;
-
+import net.sledzdev.shoppinglist.adapter.ShoppingList;
 /**
  * A list fragment representing a list of Lists. This fragment
  * also supports tablet devices by allowing list items to be given an
@@ -43,6 +42,7 @@ public class ShoppingListsFragment extends ListFragment {
      * selections.
      */
     public interface Callbacks {
+        //TODO: replace callback interface with guava event bus call
         /**
          * Callback for when an item has been selected.
          */
@@ -70,12 +70,12 @@ public class ShoppingListsFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: replace with a real list adapter.
-        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(
+        // TODO: replace with a real list adapter. Use custom loader.
+        setListAdapter(new ArrayAdapter<ShoppingList>(
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                DummyContent.ITEMS));
+                new ShoppingList[] {new ShoppingList(1, "ala ma kota")}));
     }
 
     @Override
@@ -91,6 +91,7 @@ public class ShoppingListsFragment extends ListFragment {
 
     @Override
     public void onAttach(Activity activity) {
+        //TODO: delete this method. Will use guava EventBus
         super.onAttach(activity);
 
         // Activities containing this fragment must implement its callbacks.
@@ -103,6 +104,7 @@ public class ShoppingListsFragment extends ListFragment {
 
     @Override
     public void onDetach() {
+        //TODO: same as above
         super.onDetach();
 
         // Reset the active callbacks interface to the dummy implementation.
@@ -112,10 +114,11 @@ public class ShoppingListsFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
+        //TODO: take this method to separate class
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+        mCallbacks.onItemSelected("1");
     }
 
     @Override
