@@ -13,7 +13,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 
 import net.sledzdev.shoppinglist.adapter.DataModel;
 import net.sledzdev.shoppinglist.adapter.ListMapDataModel;
-import net.sledzdev.shoppinglist.adapter.ShoppingList;
+import net.sledzdev.shoppinglist.model.ShoppingList;
 import net.sledzdev.shoppinglist.content.ShoppingProviderContract;
 
 import java.util.List;
@@ -29,13 +29,22 @@ public class ContentManager {
 
     private ListeningExecutorService service;
     private Context context;
-    private ContentResolver resolver;
-    private ContentTransformer<ShoppingList> listsCursorTransformer;
+    protected ContentResolver resolver;
+    private ContentTransformer<ShoppingList> shoppingListContentTransformer;
 
     public ContentManager(Context context) {
         service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(THREADS));
         this.context = context;
-        resolver = context.getContentResolver();
+        resolver = initResolver(context);
+        shoppingListContentTransformer = initShoppingListTransformer();
+    }
+
+    protected ContentResolver initResolver(Context context) {
+        return context.getContentResolver();
+    }
+
+    protected ContentTransformer<ShoppingList> initShoppingListTransformer() {
+        return new ListsContentTransformer();
     }
 
     public ListenableFuture<DataModel<ShoppingList>> loadShoppingListsModel() {
@@ -43,13 +52,13 @@ public class ContentManager {
             @Override
             public DataModel<ShoppingList> call() throws Exception {
                 Cursor cursor = resolver.query(ShoppingProviderContract.LIST_URI, null, null, null, null);
-                List<ShoppingList> list = listsCursorTransformer.transformCursor(cursor);
+                List<ShoppingList> list = shoppingListContentTransformer.transformCursor(cursor);
                 return new ListMapDataModel<ShoppingList>(list);
             }
         });
     }
 
-    public ListenableFuture<Integer> removeList(final ShoppingList list) {
+    public ListenableFuture<Integer> remove(final ShoppingList list) {
         return service.submit(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
@@ -59,12 +68,21 @@ public class ContentManager {
         });
     }
 
-    public void addList(final ShoppingList list) {
+    public void save(final ShoppingList list) {
         service.submit(new Runnable() {
             @Override
             public void run() {
-                ContentValues values = listsCursorTransformer.transformValue(list);
-                resolver.insert(ShoppingProviderContract.LIST_URI, values);
+                ContentValues values = shoppingListContentTransformer.transformValue(list);
+                if (list.isNewList()) {
+                    resolver.insert(ShoppingProviderContract.LIST_URI, values);
+                } else {
+                    resolver.update(
+                        ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, list.getId()),
+                        values,
+                        null,
+                        null
+                    );
+                }
             }
         });
     }
@@ -72,5 +90,4 @@ public class ContentManager {
     //TODO: add items handling
     //TODO: add events
     //TODO: test this class
-
 }

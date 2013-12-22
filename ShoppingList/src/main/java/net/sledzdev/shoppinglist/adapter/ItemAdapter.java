@@ -5,26 +5,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import net.sledzdev.shoppinglist.model.ShoppingList;
+import net.sledzdev.shoppinglist.model.ShoppingItem;
 
 /**
- * Created by Mariusz on 08.12.13.
+ * Created by Mariusz on 22.12.13.
  */
-public class ShoppingListsAdapter extends DataModelAdapter<ShoppingList> {
+public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
 
-    public ShoppingListsAdapter(Context context, DataModel<ShoppingList> model) {
+    public ItemAdapter(Context context, DataModel<ShoppingItem> model) {
         super(context, model);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         //TODO: replace mock element with true ShoppingListView and add event listeners
-        TextView shoppingListView = getShoppingListView(convertView);
+        TextView shoppingListView = getShoppingItemView(convertView);
         shoppingListView.setText(model.getAtPosition(position).get().name);
         return shoppingListView;
     }
 
-    private TextView getShoppingListView(View convertView) {
+    private TextView getShoppingItemView(View convertView) {
         TextView shoppingListView;
         if (convertView == null) {
             shoppingListView = new TextView(context);

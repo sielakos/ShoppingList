@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import net.sledzdev.shoppinglist.adapter.ShoppingList;
+import net.sledzdev.shoppinglist.model.ShoppingList;
 /**
  * A list fragment representing a list of Lists. This fragment
  * also supports tablet devices by allowing list items to be given an
@@ -75,7 +75,7 @@ public class ShoppingListsFragment extends ListFragment {
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                new ShoppingList[] {new ShoppingList(1, "ala ma kota")}));
+                new ShoppingList[] {ShoppingList.createShoppingList(1, "ala ma kota")}));
     }
 
     @Override

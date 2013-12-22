@@ -11,8 +11,8 @@ public class ItemsTable {
     public static final String TABLE_NAME = "items";
     public static final String C_ID = BaseColumns._ID;
     public static final String C_NAME = "name";
-    public static final String C_PRICE = "price";
     public static final String C_LIST_ID = "list_id";
+    public static final String C_PRICE = "price";
 
     private static final String CREATE_QUERY = "CREATE TABLE " +
             TABLE_NAME + "(" +
