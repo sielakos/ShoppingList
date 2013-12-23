@@ -7,6 +7,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -15,6 +17,7 @@ import net.sledzdev.shoppinglist.adapter.DataModel;
 import net.sledzdev.shoppinglist.adapter.ListMapDataModel;
 import net.sledzdev.shoppinglist.model.ShoppingList;
 import net.sledzdev.shoppinglist.content.ShoppingProviderContract;
+import net.sledzdev.shoppinglist.model.ShoppingListFactory;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -58,6 +61,26 @@ public class ContentManager {
         });
     }
 
+    public ListenableFuture<Optional<ShoppingList>> getList(final long id) {
+        Optional<ShoppingList> list = ShoppingListFactory.get(id);
+        if (list.isPresent()) {
+            return Futures.immediateFuture(list);
+        }
+
+        return service.submit(new Callable<Optional<ShoppingList>>() {
+            @Override
+            public Optional<ShoppingList> call() throws Exception {
+                Uri uri = ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, id);
+                Cursor cursor = resolver.query(uri, null, null, null, null);
+                List<ShoppingList> list = shoppingListContentTransformer.transformCursor(cursor);
+                if (list.size() > 0) {
+                    return Optional.of(list.get(0));
+                }
+                return Optional.absent();
+            }
+        });
+    }
+
     public ListenableFuture<Integer> remove(final ShoppingList list) {
         return service.submit(new Callable<Integer>() {
             @Override
@@ -74,7 +97,8 @@ public class ContentManager {
             public void run() {
                 ContentValues values = shoppingListContentTransformer.transformValue(list);
                 if (list.isNewList()) {
-                    resolver.insert(ShoppingProviderContract.LIST_URI, values);
+                    Uri uri = resolver.insert(ShoppingProviderContract.LIST_URI, values);
+                    addListToFactory(uri, list);
                 } else {
                     resolver.update(
                         ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, list.getId()),
@@ -85,6 +109,11 @@ public class ContentManager {
                 }
             }
         });
+    }
+
+    protected void addListToFactory(Uri uri, ShoppingList list) {
+        list.setId(Long.parseLong(uri.getLastPathSegment()));
+        ShoppingListFactory.putList(list);
     }
 
     //TODO: add items handling

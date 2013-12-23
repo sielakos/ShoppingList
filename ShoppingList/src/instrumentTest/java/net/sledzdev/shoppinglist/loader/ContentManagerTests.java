@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.test.ProviderTestCase2;
 
+import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import net.sledzdev.shoppinglist.adapter.DataModel;
@@ -16,19 +17,26 @@ import net.sledzdev.shoppinglist.content.ShoppingProviderContract;
  */
 public class ContentManagerTests extends ProviderTestCase2<ShoppingListProvider> {
 
+    private ContentResolver mockContentResolver;
+    private ContentManager manager;
+
     public ContentManagerTests() {
         super(ShoppingListProvider.class, ShoppingProviderContract.AUTHORITY);
     }
 
-    public void testContentManagerShoppingListsMethods() throws Exception {
-        final ContentResolver mockContentResolver = getMockContentResolver();
-        final ContentManager manager = new ContentManager(getContext()) {
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        mockContentResolver = getMockContentResolver();
+        manager = new ContentManager(getContext()) {
             @Override
             protected ContentResolver initResolver(Context context) {
                 return mockContentResolver;
             }
         };
+    }
 
+    public void testContentManagerShoppingListsMethods() throws Exception {
         for (int i = 0; i < 10; i++) {
             manager.save(new ShoppingList("list number " + i));
         }
@@ -62,4 +70,16 @@ public class ContentManagerTests extends ProviderTestCase2<ShoppingListProvider>
         assertEquals("tartak", shoppingList.name);
     }
 
+    public void testGetList() throws Exception {
+        ShoppingList list = new ShoppingList("ala");
+        manager.save(list);
+
+        ListenableFuture<Optional<ShoppingList>> futureOptionalList = manager.getList(list.getId() + 20);
+        Optional<ShoppingList> optionalList = futureOptionalList.get();
+
+        assertFalse(optionalList.isPresent());
+
+        optionalList = manager.getList(list.getId()).get();
+        assertTrue(optionalList.isPresent());
+    }
 }

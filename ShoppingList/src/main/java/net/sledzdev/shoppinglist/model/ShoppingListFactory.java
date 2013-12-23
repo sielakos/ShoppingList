@@ -1,5 +1,7 @@
 package net.sledzdev.shoppinglist.model;
 
+import com.google.common.base.Optional;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +11,7 @@ import java.util.Map;
 public class ShoppingListFactory {
     //TODO: use factory with manager
 
-    private static Map<Long, ShoppingList> lists  = new HashMap<Long, ShoppingList>();
+    private static Map<Long, ShoppingList> lists = new HashMap<Long, ShoppingList>();
 
     public static ShoppingList createShoppingList(long id, String name) {
         ShoppingList list = lists.get(id);
@@ -33,6 +35,11 @@ public class ShoppingListFactory {
         }
 
         lists.put(list.getId(), list);
+    }
+
+    public static Optional<ShoppingList> get(long id) {
+        //TODO: test this method
+        return Optional.fromNullable(lists.get(id));
     }
 
 }

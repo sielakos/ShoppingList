@@ -20,14 +20,16 @@ public class ShoppingListFactoryTest extends TestCase {
 
     public void testPutList() throws Exception {
         ShoppingList list1 = ShoppingListFactory.createShoppingList(1, "ala");
+        ShoppingListFactory.putList(list1);
 
+        ShoppingList list2 = new ShoppingList("mala");
+        list2.setId(1);
         boolean thrown = false;
         try {
-            //TODO: test throwing when passing wrong argument
+            ShoppingListFactory.putList(list2);
         } catch (IllegalArgumentException e) {
             thrown = true;
         }
-
         assertTrue(thrown);
     }
 }

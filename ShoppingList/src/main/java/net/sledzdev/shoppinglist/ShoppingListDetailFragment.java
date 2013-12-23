@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.sledzdev.shoppinglist.model.ShoppingList;
+import net.sledzdev.shoppinglist.model.ShoppingListFactory;
 
 /**
  * A fragment representing a single Shopping List detail screen.
@@ -40,7 +41,7 @@ public class ShoppingListDetailFragment extends Fragment {
 
         if (getArguments().containsKey(LIST_ID)) {
             //TODO: Load selected list from database.
-            mItem = ShoppingList.createShoppingList(1, "ala ma kota");
+            mItem = ShoppingListFactory.createShoppingList(1, "ala ma kota");
         }
     }
 

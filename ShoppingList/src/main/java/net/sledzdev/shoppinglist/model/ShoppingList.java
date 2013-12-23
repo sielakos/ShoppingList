@@ -30,6 +30,10 @@ public class ShoppingList implements ElementWithId {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public boolean isNewList() {
         return newList;
     }

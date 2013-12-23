@@ -1,6 +1,12 @@
 package net.sledzdev.shoppinglist.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ShoppingItemBuilder {
+    //TODO: test this class
+    private static Map<Long, ShoppingItem> createdItems = new HashMap<Long, ShoppingItem>();
+
     private long id;
     private String name;
     private double price;
@@ -33,6 +39,24 @@ public class ShoppingItemBuilder {
     }
 
     public ShoppingItem createShoppingItem() {
-        return new ShoppingItem(id, name, price, list);
+        //TODO: check if necessary field arte set
+
+        if (list == null) {
+            //TODO: get list from list_id if list not set
+        }
+
+        if (!createdItems.containsKey(id)) {
+            ShoppingItem item = new ShoppingItem(id, name, price, list);
+            createdItems.put(id, item);
+            return item;
+        }
+
+        ShoppingItem item = createdItems.get(id);
+        item.list = list;
+        item.name = name;
+        item.price = price;
+        return item;
     }
+
+
 }
