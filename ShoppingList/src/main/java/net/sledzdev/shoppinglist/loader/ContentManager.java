@@ -28,6 +28,7 @@ import java.util.concurrent.Executors;
  */
 public class ContentManager {
 
+    private static ContentManager instance;
     protected static int THREADS = 1;
 
     private ListeningExecutorService service;
@@ -35,11 +36,22 @@ public class ContentManager {
     protected ContentResolver resolver;
     private ContentTransformer<ShoppingList> shoppingListContentTransformer;
 
-    public ContentManager(Context context) {
+    ContentManager(Context context) {
         service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(THREADS));
         this.context = context;
         resolver = initResolver(context);
         shoppingListContentTransformer = initShoppingListTransformer();
+    }
+
+    public static ContentManager createContentManager(Context context) {
+        if (instance == null) {
+            instance = new ContentManager(context);
+        }
+        return instance;
+    }
+
+    public static Optional<ContentManager> getExistingManager() {
+        return Optional.fromNullable(instance);
     }
 
     protected ContentResolver initResolver(Context context) {

@@ -9,9 +9,7 @@ import java.util.Map;
  * Created by Mariusz on 22.12.13.
  */
 public class ShoppingListFactory {
-    //TODO: use factory with manager
-
-    private static Map<Long, ShoppingList> lists = new HashMap<Long, ShoppingList>();
+    static Map<Long, ShoppingList> lists = new HashMap<Long, ShoppingList>();
 
     public static ShoppingList createShoppingList(long id, String name) {
         ShoppingList list = lists.get(id);
@@ -38,7 +36,6 @@ public class ShoppingListFactory {
     }
 
     public static Optional<ShoppingList> get(long id) {
-        //TODO: test this method
         return Optional.fromNullable(lists.get(id));
     }
 

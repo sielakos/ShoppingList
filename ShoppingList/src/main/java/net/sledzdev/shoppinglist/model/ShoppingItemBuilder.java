@@ -2,16 +2,20 @@ package net.sledzdev.shoppinglist.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import com.google.common.base.Optional;
+
+import net.sledzdev.shoppinglist.loader.ContentManager;
 
 public class ShoppingItemBuilder {
-    //TODO: test this class
     private static Map<Long, ShoppingItem> createdItems = new HashMap<Long, ShoppingItem>();
 
-    private long id;
+    private long id = -1;
     private String name;
-    private double price;
+    private double price = 0.0;
     private ShoppingList list;
-    private long list_id;
+    private long list_id = -1;
 
     public ShoppingItemBuilder setId(long id) {
         this.id = id;
@@ -39,11 +43,7 @@ public class ShoppingItemBuilder {
     }
 
     public ShoppingItem createShoppingItem() {
-        //TODO: check if necessary field arte set
-
-        if (list == null) {
-            //TODO: get list from list_id if list not set
-        }
+        preconditions();
 
         if (!createdItems.containsKey(id)) {
             ShoppingItem item = new ShoppingItem(id, name, price, list);
@@ -58,5 +58,44 @@ public class ShoppingItemBuilder {
         return item;
     }
 
+    protected void preconditions() {
+        if (listNotSet() || name == null) {
+            throw new IllegalArgumentException("shopping list or name not set!");
+        }
+
+        if (list == null) {
+            try {
+                setListFromId();
+            } catch (InterruptedException e) {
+                throw new IllegalArgumentException(e.toString());
+            } catch (ExecutionException e) {
+                throw new IllegalArgumentException(e.toString());
+            }
+        }
+    }
+
+    protected boolean listNotSet() {
+        return list == null && list_id < 0;
+    }
+
+    protected void setListFromId() throws InterruptedException, ExecutionException{
+        Optional<ShoppingList> shoppingListOptional = getShoppingListOptional();
+        if (!shoppingListOptional.isPresent()) {
+            throw new IllegalArgumentException("shopping item must have list");
+        }
+        list = shoppingListOptional.orNull();
+    }
+
+    private Optional<ShoppingList> getShoppingListOptional() throws InterruptedException, ExecutionException {
+        Optional<ShoppingList> shoppingListOptional;
+        Optional<ContentManager> managerOptional = ContentManager.getExistingManager();
+
+        if (managerOptional.isPresent()) {
+            shoppingListOptional = managerOptional.get().getList(list_id).get();
+        } else {
+            shoppingListOptional = ShoppingListFactory.get(list_id);
+        }
+        return shoppingListOptional;
+    }
 
 }
