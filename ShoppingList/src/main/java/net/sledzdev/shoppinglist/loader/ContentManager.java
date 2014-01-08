@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.Futures;
@@ -15,8 +16,10 @@ import com.google.common.util.concurrent.MoreExecutors;
 
 import net.sledzdev.shoppinglist.adapter.DataModel;
 import net.sledzdev.shoppinglist.adapter.ListMapDataModel;
-import net.sledzdev.shoppinglist.model.ShoppingList;
+import net.sledzdev.shoppinglist.content.ItemsTable;
 import net.sledzdev.shoppinglist.content.ShoppingProviderContract;
+import net.sledzdev.shoppinglist.model.ShoppingItem;
+import net.sledzdev.shoppinglist.model.ShoppingList;
 import net.sledzdev.shoppinglist.model.ShoppingListFactory;
 
 import java.util.List;
@@ -28,19 +31,20 @@ import java.util.concurrent.Executors;
  */
 public class ContentManager {
 
-    private static ContentManager instance;
     protected static int THREADS = 1;
-
+    private static ContentManager instance;
+    protected ContentResolver resolver;
     private ListeningExecutorService service;
     private Context context;
-    protected ContentResolver resolver;
     private ContentTransformer<ShoppingList> shoppingListContentTransformer;
+    private ContentTransformer<ShoppingItem> shoppingItemContentTransformer;
 
     ContentManager(Context context) {
         service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(THREADS));
         this.context = context;
         resolver = initResolver(context);
         shoppingListContentTransformer = initShoppingListTransformer();
+        shoppingItemContentTransformer = initItemContentTransformer();
     }
 
     public static ContentManager createContentManager(Context context) {
@@ -52,6 +56,10 @@ public class ContentManager {
 
     public static Optional<ContentManager> getExistingManager() {
         return Optional.fromNullable(instance);
+    }
+
+    private ItemContentTransformer initItemContentTransformer() {
+        return new ItemContentTransformer();
     }
 
     protected ContentResolver initResolver(Context context) {
@@ -113,10 +121,10 @@ public class ContentManager {
                     addListToFactory(uri, list);
                 } else {
                     resolver.update(
-                        ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, list.getId()),
-                        values,
-                        null,
-                        null
+                            ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, list.getId()),
+                            values,
+                            null,
+                            null
                     );
                 }
             }
@@ -125,10 +133,63 @@ public class ContentManager {
 
     protected void addListToFactory(Uri uri, ShoppingList list) {
         list.setId(Long.parseLong(uri.getLastPathSegment()));
+        list.setNewList(false);
         ShoppingListFactory.putList(list);
     }
 
-    //TODO: add items handling
+    public void save(final ShoppingItem item) {
+        //TODO: check change of id after insert
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                ContentValues values = shoppingItemContentTransformer.transformValue(item);
+                if (item.newItem) {
+                    insertNewItem(values, item);
+                } else {
+                    updateOldItem(values, item);
+                }
+            }
+        });
+    }
+
+    protected void insertNewItem(ContentValues values, ShoppingItem item) {
+        Uri uri = resolver.insert(ShoppingProviderContract.ITEMS_URI, values);
+        long id = Long.parseLong(uri.getLastPathSegment());
+        item.newItem = false;
+        item.id = id;
+    }
+
+    protected void updateOldItem(ContentValues values, ShoppingItem item) {
+        Uri uri = ContentUris.withAppendedId(ShoppingProviderContract.ITEMS_URI, item.id);
+        resolver.update(uri, values, null, null);
+    }
+
+    public ListenableFuture<Integer> remove(final ShoppingItem item) {
+        return service.submit(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                Uri uri = ContentUris.withAppendedId(ShoppingProviderContract.ITEMS_URI, item.id);
+                return resolver.delete(uri, null, null);
+            }
+        });
+    }
+
+    public ListenableFuture<DataModel<ShoppingItem>> loadItems(final long list_id) {
+        return service.submit(new Callable<DataModel<ShoppingItem>>() {
+            @Override
+            public DataModel<ShoppingItem> call() throws Exception {
+                Cursor cursor = resolver.query(ShoppingProviderContract.ITEMS_URI, null,
+                        ItemsTable.C_LIST_ID + " = ?", new String[]{list_id + ""}, null);
+                List<ShoppingItem> list = shoppingItemContentTransformer.transformCursor(cursor);
+                return new ListMapDataModel<ShoppingItem>(list);
+            }
+        });
+    }
+
+    public ListenableFuture<DataModel<ShoppingItem>> loadItems(final ShoppingList list) {
+        return loadItems(list.getId());
+    }
+
     //TODO: add events
-    //TODO: test this class
+    //TODO: test item methods
 }

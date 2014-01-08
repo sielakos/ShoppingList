@@ -1,21 +1,33 @@
 package net.sledzdev.shoppinglist.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import android.util.Log;
 
 import com.google.common.base.Optional;
 
 import net.sledzdev.shoppinglist.loader.ContentManager;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+
 public class ShoppingItemBuilder {
-    private static Map<Long, ShoppingItem> createdItems = new HashMap<Long, ShoppingItem>();
+    private static Set<ShoppingItem> createdItems = new HashSet<ShoppingItem>();
+    private static Map<Long, ShoppingItem> itemsWithId = new HashMap<Long, ShoppingItem>();
+
+    public void put(ShoppingItem item) {
+        if (item.id != -1) {
+            itemsWithId.put(item.id, item);
+        }
+    }
 
     private long id = -1;
     private String name;
     private double price = 0.0;
     private ShoppingList list;
     private long list_id = -1;
+    private boolean newItem = false;
 
     public ShoppingItemBuilder setId(long id) {
         this.id = id;
@@ -42,20 +54,20 @@ public class ShoppingItemBuilder {
         return this;
     }
 
+    public void setNewItem(boolean newItem) {
+        //TODO: test this method
+        this.newItem = newItem;
+    }
+
     public ShoppingItem createShoppingItem() {
+        //TODO: test creating new item
         preconditions();
 
-        if (!createdItems.containsKey(id)) {
-            ShoppingItem item = new ShoppingItem(id, name, price, list);
-            createdItems.put(id, item);
-            return item;
+        if (checkIfNew()) {
+            return createNewItem();
         }
 
-        ShoppingItem item = createdItems.get(id);
-        item.list = list;
-        item.name = name;
-        item.price = price;
-        return item;
+        return changeExistingItem();
     }
 
     protected void preconditions() {
@@ -74,14 +86,41 @@ public class ShoppingItemBuilder {
         }
     }
 
+    protected boolean checkIfNew() {
+        return newItem || id == -1 || !itemsWithId.containsKey(id);
+    }
+
+    protected ShoppingItem createNewItem() {
+        correctNewItemFlag();
+        ShoppingItem item = new ShoppingItem(id, name, price, list, newItem);
+        createdItems.add(item);
+        put(item);
+        return item;
+    }
+
+    private void correctNewItemFlag() {
+        if (id == -1) {
+            newItem = true;
+        }
+    }
+
+    protected ShoppingItem changeExistingItem() {
+        ShoppingItem item = itemsWithId.get(id);
+        item.list = list;
+        item.name = name;
+        item.price = price;
+        item.newItem = newItem;
+        return item;
+    }
+
     protected boolean listNotSet() {
         return list == null && list_id < 0;
     }
 
-    protected void setListFromId() throws InterruptedException, ExecutionException{
+    protected void setListFromId() throws InterruptedException, ExecutionException {
         Optional<ShoppingList> shoppingListOptional = getShoppingListOptional();
         if (!shoppingListOptional.isPresent()) {
-            throw new IllegalArgumentException("shopping item must have list");
+            throw new IllegalArgumentException("shopping item must have list\n got: " + this);
         }
         list = shoppingListOptional.orNull();
     }
@@ -95,7 +134,19 @@ public class ShoppingItemBuilder {
         } else {
             shoppingListOptional = ShoppingListFactory.get(list_id);
         }
+
         return shoppingListOptional;
     }
 
+    @Override
+    public String toString() {
+        return "ShoppingItemBuilder{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", list=" + list +
+                ", list_id=" + list_id +
+                ", newItem=" + newItem +
+                '}';
+    }
 }

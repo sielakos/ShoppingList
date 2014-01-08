@@ -1,5 +1,7 @@
 package net.sledzdev.shoppinglist.model;
 
+import android.util.Log;
+
 import com.google.common.base.Optional;
 
 import java.util.HashMap;
@@ -23,6 +25,10 @@ public class ShoppingListFactory {
         }
 
         return list;
+    }
+
+    public static void clearLists()  {
+        lists.clear();
     }
 
     public static void putList(ShoppingList list) {

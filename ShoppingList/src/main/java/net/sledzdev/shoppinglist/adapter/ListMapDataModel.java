@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -60,5 +61,27 @@ public class ListMapDataModel<T extends ElementWithId> implements DataModel<T> {
     @Override
     public int size() {
         return list.size();
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        final Iterator<T> helpIterator = list.iterator();
+
+        return new Iterator<T>() {
+            @Override
+            public boolean hasNext() {
+                return helpIterator.hasNext();
+            }
+
+            @Override
+            public T next() {
+                return helpIterator.next();
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 }
