@@ -43,7 +43,7 @@ public class ContentManagerTests extends ProviderTestCase2<ShoppingListProvider>
 
     public void testContentManagerShoppingListsMethods() throws Exception {
         for (int i = 0; i < 10; i++) {
-            manager.save(new ShoppingList("list number " + i));
+            manager.save(new ShoppingList("list number " + i)).get();
         }
 
         ListenableFuture<DataModel<ShoppingList>> futureLists = manager.loadShoppingListsModel();
@@ -79,8 +79,7 @@ public class ContentManagerTests extends ProviderTestCase2<ShoppingListProvider>
     public void testGetList() throws Exception {
         ShoppingList list = new ShoppingList("ala");
         assertEquals(-1, list.getId());
-        manager.save(list);
-        Thread.sleep(300); //need to wait for async code
+        manager.save(list).get();
         assertTrue("list id >= 0", list.getId() >= 0);
 
         ListenableFuture<Optional<ShoppingList>> futureOptionalList = manager.getList(list.getId() + 20);
@@ -94,8 +93,7 @@ public class ContentManagerTests extends ProviderTestCase2<ShoppingListProvider>
 
     public void testItemMethods() throws Exception {
         ShoppingList list = new ShoppingList("tesco");
-        manager.save(list);
-        Thread.sleep(300); //need to wait for async code
+        manager.save(list).get();
 
         for (int i = 0; i < 10; i++) {
             ShoppingItemBuilder builder = new ShoppingItemBuilder();
@@ -115,7 +113,7 @@ public class ContentManagerTests extends ProviderTestCase2<ShoppingListProvider>
         assertEquals(10, itemDataModel.size());
 
         ShoppingItem item = itemDataModel.getAtPosition(1).get();
-        manager.remove(item);
+        manager.remove(item).get();
 
         itemDataModel = manager.loadItems(list).get();
         assertEquals(9, itemDataModel.size());
@@ -127,10 +125,44 @@ public class ContentManagerTests extends ProviderTestCase2<ShoppingListProvider>
         builder.setPrice(1.8);
         ShoppingItem item1 = builder.createShoppingItem();
 
-        manager.save(item1);
-        Thread.sleep(300); //need to wait for async code
+        manager.save(item1).get();
         assertTrue("id is set and is greater equal to 0", item1.getId() >= 0);
 
-        //TODO: test insertion to second list
+        ShoppingList list2 = new ShoppingList("biedronka");
+        manager.save(list2).get();
+
+        for (int i = 0; i < 6; i++) {
+            ShoppingItemBuilder builder2 = new ShoppingItemBuilder();
+            builder2.setList(list2);
+            builder2.setPrice(3.4);
+            builder2.setName("kartofle");
+            ShoppingItem item2 = builder2.createShoppingItem();
+            manager.save(item2).get();
+        }
+
+        DataModel<ShoppingItem> items = manager.loadItems(list2).get();
+        assertEquals(6, items.size());
+
+        item = items.getAtPosition(0).get();
+        assertEquals(3.4, item.price);
+        assertEquals("kartofle", item.name);
+
+        manager.remove(item);
+
+        items = manager.loadItems(list2).get();
+        assertEquals(5, items.size());
+        assertExists(false, item, items);
+    }
+
+    protected void assertExists(boolean expected, ShoppingItem item, DataModel<ShoppingItem> items) {
+        boolean exists = false;
+        ShoppingItem found = null;
+        for (ShoppingItem otherItem : items) {
+            if (otherItem.equals(item)) {
+                exists = true;
+                found = otherItem;
+            }
+        }
+        assertEquals("item: " + item + ", found: " + found + ", exists: " + exists, expected,  exists);
     }
 }

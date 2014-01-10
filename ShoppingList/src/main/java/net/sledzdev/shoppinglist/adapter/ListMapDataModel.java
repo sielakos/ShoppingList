@@ -84,4 +84,11 @@ public class ListMapDataModel<T extends ElementWithId> implements DataModel<T> {
             }
         };
     }
+
+    @Override
+    public String toString() {
+        return "ListMapDataModel{" +
+                "list=" + list +
+                '}';
+    }
 }

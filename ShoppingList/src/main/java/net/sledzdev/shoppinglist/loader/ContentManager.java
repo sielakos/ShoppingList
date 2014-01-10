@@ -45,16 +45,20 @@ public class ContentManager {
         resolver = initResolver(context);
         shoppingListContentTransformer = initShoppingListTransformer();
         shoppingItemContentTransformer = initItemContentTransformer();
+        if (instance == null) {
+            instance = this;
+        }
     }
 
     public static ContentManager createContentManager(Context context) {
         if (instance == null) {
-            instance = new ContentManager(context);
+            return new ContentManager(context);
         }
         return instance;
     }
 
     public static Optional<ContentManager> getExistingManager() {
+        //TODO: test this method
         return Optional.fromNullable(instance);
     }
 
@@ -111,8 +115,8 @@ public class ContentManager {
         });
     }
 
-    public void save(final ShoppingList list) {
-        service.submit(new Runnable() {
+    public ListenableFuture save(final ShoppingList list) {
+        return service.submit(new Runnable() {
             @Override
             public void run() {
                 ContentValues values = shoppingListContentTransformer.transformValue(list);
@@ -137,9 +141,8 @@ public class ContentManager {
         ShoppingListFactory.putList(list);
     }
 
-    public void save(final ShoppingItem item) {
-        //TODO: check change of id after insert
-        service.submit(new Runnable() {
+    public ListenableFuture save(final ShoppingItem item) {
+        return service.submit(new Runnable() {
             @Override
             public void run() {
                 ContentValues values = shoppingItemContentTransformer.transformValue(item);
