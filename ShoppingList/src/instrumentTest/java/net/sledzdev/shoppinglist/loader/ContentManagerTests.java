@@ -32,12 +32,7 @@ public class ContentManagerTests extends ProviderTestCase2<ShoppingListProvider>
     public void setUp() throws Exception {
         super.setUp();
         mockContentResolver = getMockContentResolver();
-        manager = new ContentManager(getContext()) {
-            @Override
-            protected ContentResolver initResolver(Context context) {
-                return mockContentResolver;
-            }
-        };
+        manager = new MockContentManager(mockContentResolver);
         ShoppingListFactory.clearLists();
     }
 
@@ -163,6 +158,10 @@ public class ContentManagerTests extends ProviderTestCase2<ShoppingListProvider>
                 found = otherItem;
             }
         }
-        assertEquals("item: " + item + ", found: " + found + ", exists: " + exists, expected,  exists);
+        assertEquals("item: " + item + ", found: " + found + ", exists: " + exists, expected, exists);
+    }
+
+    public void testGetManager() throws Exception {
+        assertTrue("manager exists", ContentManager.getExistingManager().isPresent());
     }
 }

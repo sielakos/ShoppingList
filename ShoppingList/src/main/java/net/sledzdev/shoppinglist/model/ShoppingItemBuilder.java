@@ -27,7 +27,6 @@ public class ShoppingItemBuilder {
     private double price = 0.0;
     private ShoppingList list;
     private long list_id = -1;
-    private boolean newItem = false;
 
     public ShoppingItemBuilder setId(long id) {
         this.id = id;
@@ -54,13 +53,7 @@ public class ShoppingItemBuilder {
         return this;
     }
 
-    public void setNewItem(boolean newItem) {
-        //TODO: test this method
-        this.newItem = newItem;
-    }
-
     public ShoppingItem createShoppingItem() {
-        //TODO: test creating new item
         preconditions();
 
         if (checkIfNew()) {
@@ -87,21 +80,14 @@ public class ShoppingItemBuilder {
     }
 
     protected boolean checkIfNew() {
-        return newItem || id == -1 || !itemsWithId.containsKey(id);
+        return id == -1 || !itemsWithId.containsKey(id);
     }
 
     protected ShoppingItem createNewItem() {
-        correctNewItemFlag();
-        ShoppingItem item = new ShoppingItem(id, name, price, list, newItem);
+        ShoppingItem item = new ShoppingItem(id, name, price, list, id == -1);
         createdItems.add(item);
         put(item);
         return item;
-    }
-
-    private void correctNewItemFlag() {
-        if (id == -1) {
-            newItem = true;
-        }
     }
 
     protected ShoppingItem changeExistingItem() {
@@ -109,7 +95,6 @@ public class ShoppingItemBuilder {
         item.list = list;
         item.name = name;
         item.price = price;
-        item.newItem = newItem;
         return item;
     }
 
@@ -146,7 +131,6 @@ public class ShoppingItemBuilder {
                 ", price=" + price +
                 ", list=" + list +
                 ", list_id=" + list_id +
-                ", newItem=" + newItem +
                 '}';
     }
 }

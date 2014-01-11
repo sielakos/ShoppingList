@@ -6,9 +6,8 @@ import net.sledzdev.shoppinglist.adapter.ElementWithId;
  * Created by Mariusz on 10.12.13.
  */
 public class ShoppingList implements ElementWithId {
-    //TODO: add list of items
-    private long id;
     public String name;
+    private long id;
     private boolean newList;
 
     ShoppingList(long id, String name) {

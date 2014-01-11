@@ -58,7 +58,6 @@ public class ContentManager {
     }
 
     public static Optional<ContentManager> getExistingManager() {
-        //TODO: test this method
         return Optional.fromNullable(instance);
     }
 
@@ -192,7 +191,4 @@ public class ContentManager {
     public ListenableFuture<DataModel<ShoppingItem>> loadItems(final ShoppingList list) {
         return loadItems(list.getId());
     }
-
-    //TODO: add events
-    //TODO: test item methods
 }
