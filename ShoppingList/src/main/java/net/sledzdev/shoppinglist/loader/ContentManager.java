@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -18,12 +19,14 @@ import net.sledzdev.shoppinglist.adapter.DataModel;
 import net.sledzdev.shoppinglist.adapter.ListMapDataModel;
 import net.sledzdev.shoppinglist.content.ItemsTable;
 import net.sledzdev.shoppinglist.content.ShoppingProviderContract;
+import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
 import net.sledzdev.shoppinglist.model.ShoppingList;
 import net.sledzdev.shoppinglist.model.ShoppingListFactory;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
@@ -38,6 +41,7 @@ public class ContentManager {
     private Context context;
     private ContentTransformer<ShoppingList> shoppingListContentTransformer;
     private ContentTransformer<ShoppingItem> shoppingItemContentTransformer;
+    private Executor executor;
 
     ContentManager(Context context) {
         service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(THREADS));
@@ -51,9 +55,7 @@ public class ContentManager {
     }
 
     public static ContentManager createContentManager(Context context) {
-        if (instance == null) {
-            return new ContentManager(context);
-        }
+        instance = new ContentManager(context);
         return instance;
     }
 
@@ -114,14 +116,15 @@ public class ContentManager {
         });
     }
 
-    public ListenableFuture save(final ShoppingList list) {
-        return service.submit(new Runnable() {
+    public ListenableFuture<Uri> save(final ShoppingList list) {
+        return service.submit(new Callable<Uri>() {
             @Override
-            public void run() {
+            public Uri call() throws Exception {
                 ContentValues values = shoppingListContentTransformer.transformValue(list);
                 if (list.isNewList()) {
                     Uri uri = resolver.insert(ShoppingProviderContract.LIST_URI, values);
                     addListToFactory(uri, list);
+                    return uri;
                 } else {
                     resolver.update(
                             ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, list.getId()),
@@ -129,6 +132,7 @@ public class ContentManager {
                             null,
                             null
                     );
+                    return ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, list.getId());
                 }
             }
         });

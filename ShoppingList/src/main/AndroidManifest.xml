@@ -21,11 +21,16 @@
         <activity
             android:name=".ShoppingListsActivity"
             android:label="@string/title_shoppinglist_list" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
         <activity
             android:name="net.sledzdev.shoppinglist.ShoppingListDetailActivity"
             android:label="@string/title_shoppinglist_detail"
-            android:parentActivityName=".ShoppingListListActivity" >
+            android:parentActivityName="net.sledzdev.shoppinglist.ShoppingListsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ShoppingListListActivity" />

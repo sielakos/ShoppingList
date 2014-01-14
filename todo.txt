@@ -1,2 +1,8 @@
-TODO: user interface
+TODO: find out why id passed to detail activity is incorrect
+TODO: displaying lists
+TODO: button to add list
+TODO: activity to add/edit list
+TODO: "remove" button in list context menu
+TODO: "edit" button in list context menu
+TODO: think about other UI elements
 TODO: espresso tests

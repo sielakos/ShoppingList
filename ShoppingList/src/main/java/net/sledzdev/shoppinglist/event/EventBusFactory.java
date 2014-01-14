@@ -10,7 +10,9 @@ public class EventBusFactory {
 
     static private Optional<EventBus> eventBus = Optional.absent();
 
-    public EventBus getEventBus() {
+    private EventBusFactory() {}
+
+    static public EventBus getEventBus() {
         if (eventBus.isPresent()) {
            return eventBus.get();
         }

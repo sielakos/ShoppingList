@@ -3,6 +3,7 @@ package net.sledzdev.shoppinglist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 
 /**
@@ -48,8 +49,6 @@ public class ShoppingListsActivity extends FragmentActivity
                     .findFragmentById(R.id.shoppinglist_list))
                     .setActivateOnItemClick(true);
         }
-
-        // TODO: If exposing deep links into your app, handle intents here.
     }
 
     /**
@@ -58,6 +57,7 @@ public class ShoppingListsActivity extends FragmentActivity
      */
     @Override
     public void onItemSelected(String id) {
+        Log.i("shopping app info", "list clicked id: " + id);
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
