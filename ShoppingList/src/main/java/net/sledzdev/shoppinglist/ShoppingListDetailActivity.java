@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MenuItem;
 
 /**
@@ -37,9 +38,7 @@ public class ShoppingListDetailActivity extends FragmentActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(ShoppingListDetailFragment.LIST_ID,
-                    getIntent().getStringExtra(ShoppingListDetailFragment.LIST_ID));
+            Bundle arguments = getIntent().getExtras();
             ShoppingListDetailFragment fragment = new ShoppingListDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

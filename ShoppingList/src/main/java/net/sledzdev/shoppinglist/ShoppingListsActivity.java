@@ -56,14 +56,15 @@ public class ShoppingListsActivity extends FragmentActivity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(String id) {
+    public void onItemSelected(long id) {
         Log.i("shopping app info", "list clicked id: " + id);
+        Bundle arguments = new Bundle();
+        arguments.putLong(ShoppingListDetailFragment.LIST_ID, id);
+
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(ShoppingListDetailFragment.LIST_ID, id);
             ShoppingListDetailFragment fragment = new ShoppingListDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -74,7 +75,7 @@ public class ShoppingListsActivity extends FragmentActivity
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
             Intent detailIntent = new Intent(this, ShoppingListDetailActivity.class);
-            detailIntent.putExtra(ShoppingListDetailFragment.LIST_ID, id);
+            detailIntent.putExtras(arguments);
             startActivity(detailIntent);
         }
     }

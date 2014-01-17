@@ -40,7 +40,7 @@ public class ShoppingListsFragment extends ListFragment {
      */
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(String id) {
+        public void onItemSelected(long id) {
         }
     };
     /**
@@ -121,7 +121,8 @@ public class ShoppingListsFragment extends ListFragment {
 
     private void createList(String listName) {
         final ShoppingList list = new ShoppingList(listName);
-        Futures.addCallback(contentManager.save(list), new FutureCallback() {
+
+        FutureCallback callback = new FutureCallback() {
             @Override
             public void onSuccess(Object o) {
                 for (int i = 0; i < 4; i++) {
@@ -138,7 +139,9 @@ public class ShoppingListsFragment extends ListFragment {
             public void onFailure(Throwable throwable) {
                 Log.d("shopping app error", "exception: " + throwable);
             }
-        });
+        };
+
+        Futures.addCallback(contentManager.save(list), callback);
     }
 
     @Override
@@ -153,7 +156,7 @@ public class ShoppingListsFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
-        mCallbacks.onItemSelected(id + "");
+        mCallbacks.onItemSelected(id);
     }
 
     @Override
@@ -198,6 +201,6 @@ public class ShoppingListsFragment extends ListFragment {
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(String id);
+        public void onItemSelected(long id);
     }
 }
