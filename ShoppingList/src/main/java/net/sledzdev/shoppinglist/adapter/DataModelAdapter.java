@@ -1,6 +1,7 @@
 package net.sledzdev.shoppinglist.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
 
 import com.google.common.base.Optional;
@@ -39,5 +40,9 @@ public abstract class DataModelAdapter<T extends ElementWithId> extends BaseAdap
             return maybeItem.get().getId();
         }
         return -1;
+    }
+
+    protected LayoutInflater getInflater() {
+        return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 }

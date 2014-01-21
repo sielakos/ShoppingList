@@ -57,7 +57,6 @@ public class ShoppingListsActivity extends FragmentActivity
      */
     @Override
     public void onItemSelected(long id) {
-        Log.i("shopping app info", "list clicked id: " + id);
         Bundle arguments = new Bundle();
         arguments.putLong(ShoppingListDetailFragment.LIST_ID, id);
 
@@ -70,7 +69,6 @@ public class ShoppingListsActivity extends FragmentActivity
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.shoppinglist_detail_container, fragment)
                     .commit();
-
         } else {
             // In single-pane mode, simply start the detail activity
             // for the selected item ID.
