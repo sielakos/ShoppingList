@@ -1,4 +1,3 @@
-TODO: displaying lists
 TODO: replace old event with eventbus
 TODO: add checked field in database
 TODO: avoid states by using text fields intead of text views

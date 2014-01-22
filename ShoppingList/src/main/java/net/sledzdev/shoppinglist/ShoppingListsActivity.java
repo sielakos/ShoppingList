@@ -1,9 +1,10 @@
 package net.sledzdev.shoppinglist;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+
+import net.sledzdev.shoppinglist.event.EventBusFactory;
+import net.sledzdev.shoppinglist.event.ListSelectedEvent;
 
 
 /**
@@ -18,12 +19,8 @@ import android.util.Log;
  * {@link ShoppingListsFragment} and the item details
  * (if present) is a {@link ShoppingListDetailFragment}.
  * <p>
- * This activity also implements the required
- * {@link ShoppingListsFragment.Callbacks} interface
- * to listen for item selections.
  */
-public class ShoppingListsActivity extends FragmentActivity
-        implements ShoppingListsFragment.Callbacks {
+public class ShoppingListsActivity extends FragmentActivity {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -35,6 +32,8 @@ public class ShoppingListsActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shoppinglist_list);
+
+        registerListeners();
 
         if (findViewById(R.id.shoppinglist_detail_container) != null) {
             // The detail container view will be present only in the
@@ -51,30 +50,12 @@ public class ShoppingListsActivity extends FragmentActivity
         }
     }
 
-    /**
-     * Callback method from {@link ShoppingListsFragment.Callbacks}
-     * indicating that the item with the given ID was selected.
-     */
-    @Override
-    public void onItemSelected(long id) {
-        Bundle arguments = new Bundle();
-        arguments.putLong(ShoppingListDetailFragment.LIST_ID, id);
+    private void registerListeners() {
+        ListSelectedEventHandler listSelectedEventHandler = new ListSelectedEventHandler(this);
+        EventBusFactory.getEventBus().register(listSelectedEventHandler);
+    }
 
-        if (mTwoPane) {
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            ShoppingListDetailFragment fragment = new ShoppingListDetailFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.shoppinglist_detail_container, fragment)
-                    .commit();
-        } else {
-            // In single-pane mode, simply start the detail activity
-            // for the selected item ID.
-            Intent detailIntent = new Intent(this, ShoppingListDetailActivity.class);
-            detailIntent.putExtras(arguments);
-            startActivity(detailIntent);
-        }
+    public boolean ismTwoPane() {
+        return mTwoPane;
     }
 }

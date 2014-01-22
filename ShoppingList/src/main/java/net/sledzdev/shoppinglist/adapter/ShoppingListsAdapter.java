@@ -39,7 +39,6 @@ public class ShoppingListsAdapter extends DataModelAdapter<ShoppingList> {
             holder = new ShoppingListHolder();
             holder.main = main;
             holder.delete = (Button) main.findViewById(R.id.delete_list);
-            holder.edit = (Button) main.findViewById(R.id.edlit_list);
             holder.listName = (TextView) main.findViewById(R.id.list_name);
             main.setTag(holder);
         }
@@ -49,7 +48,6 @@ public class ShoppingListsAdapter extends DataModelAdapter<ShoppingList> {
     public static class ShoppingListHolder {
         public TextView listName;
         public Button delete;
-        public Button edit;
         public View main;
     }
 

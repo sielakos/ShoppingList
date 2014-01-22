@@ -7,7 +7,6 @@ import android.provider.BaseColumns;
  * Created by Mariusz on 22.11.13.
  */
 public class ItemsTable {
-
     public static final String TABLE_NAME = "items";
     public static final String C_ID = BaseColumns._ID;
     public static final String C_NAME = "name";

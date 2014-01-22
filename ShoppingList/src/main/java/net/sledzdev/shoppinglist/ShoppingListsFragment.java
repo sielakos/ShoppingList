@@ -13,7 +13,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import net.sledzdev.shoppinglist.adapter.DataModel;
 import net.sledzdev.shoppinglist.adapter.ShoppingListsAdapter;
-import net.sledzdev.shoppinglist.loader.ContentManager;
+import net.sledzdev.shoppinglist.event.EventBusFactory;
+import net.sledzdev.shoppinglist.event.ListSelectedEvent;
+import net.sledzdev.shoppinglist.manager.ContentManager;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
 import net.sledzdev.shoppinglist.model.ShoppingItemBuilder;
 import net.sledzdev.shoppinglist.model.ShoppingList;
@@ -24,8 +26,6 @@ import net.sledzdev.shoppinglist.model.ShoppingList;
  * 'activated' state upon selection. This helps indicate which item is
  * currently being viewed in a {@link ShoppingListDetailFragment}.
  * <p/>
- * Activities containing this fragment MUST implement the {@link Callbacks}
- * interface.
  */
 public class ShoppingListsFragment extends ListFragment {
 
@@ -34,20 +34,7 @@ public class ShoppingListsFragment extends ListFragment {
      * activated item position. Only used on tablets.
      */
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
-    /**
-     * A dummy implementation of the {@link Callbacks} interface that does
-     * nothing. Used only when this fragment is not attached to an activity.
-     */
-    private static Callbacks sDummyCallbacks = new Callbacks() {
-        @Override
-        public void onItemSelected(long id) {
-        }
-    };
-    /**
-     * The fragment's current callback object, which is notified of list item
-     * clicks.
-     */
-    private Callbacks mCallbacks = sDummyCallbacks;
+
     /**
      * The current activated item position. Only used on tablets.
      */
@@ -82,14 +69,6 @@ public class ShoppingListsFragment extends ListFragment {
         super.onAttach(activity);
 
         initContentManagerAndLoadLists();
-
-        //TODO: deleted the code handling events, co EventBus will be used instead
-        // Activities containing this fragment must implement its callbacks.
-        if (!(activity instanceof Callbacks)) {
-            throw new IllegalStateException("Activity must implement fragment's callbacks.");
-        }
-
-        mCallbacks = (Callbacks) activity;
     }
 
     private void initContentManagerAndLoadLists() {
@@ -145,18 +124,9 @@ public class ShoppingListsFragment extends ListFragment {
     }
 
     @Override
-    public void onDetach() {
-        //TODO: same as above
-        super.onDetach();
-
-        // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
-    }
-
-    @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
-        mCallbacks.onItemSelected(id);
+        EventBusFactory.getEventBus().post(new ListSelectedEvent(id));
     }
 
     @Override
@@ -190,17 +160,4 @@ public class ShoppingListsFragment extends ListFragment {
         mActivatedPosition = position;
     }
 
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
-     */
-    public interface Callbacks {
-        //TODO: replace callback interface with guava event bus call
-
-        /**
-         * Callback for when an item has been selected.
-         */
-        public void onItemSelected(long id);
-    }
 }

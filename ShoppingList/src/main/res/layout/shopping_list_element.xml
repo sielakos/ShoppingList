@@ -8,23 +8,18 @@
     >
 
     <TextView
+        android:id="@+id/list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:id="@+id/list_name"
         android:layout_weight="1" />
 
     <Button
+        android:id="@+id/delete_list"
         android:layout_width="82dp"
         android:layout_height="wrap_content"
         android:text="X"
-        android:id="@+id/delete_list"
         android:textColor="@color/delete_red" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="edit"
-        android:id="@+id/edlit_list" />
 </LinearLayout>

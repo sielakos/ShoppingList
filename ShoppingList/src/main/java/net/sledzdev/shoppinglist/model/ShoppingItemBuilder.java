@@ -1,10 +1,8 @@
 package net.sledzdev.shoppinglist.model;
 
-import android.util.Log;
-
 import com.google.common.base.Optional;
 
-import net.sledzdev.shoppinglist.loader.ContentManager;
+import net.sledzdev.shoppinglist.manager.ContentManager;
 
 import java.util.HashMap;
 import java.util.HashSet;

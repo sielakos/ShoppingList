@@ -18,7 +18,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import net.sledzdev.shoppinglist.adapter.DataModel;
 import net.sledzdev.shoppinglist.adapter.ItemAdapter;
-import net.sledzdev.shoppinglist.loader.ContentManager;
+import net.sledzdev.shoppinglist.manager.ContentManager;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
 import net.sledzdev.shoppinglist.model.ShoppingList;
 
