@@ -21,7 +21,10 @@ import net.sledzdev.shoppinglist.model.ShoppingItem;
 import net.sledzdev.shoppinglist.model.ShoppingList;
 import net.sledzdev.shoppinglist.model.ShoppingListFactory;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -32,7 +35,7 @@ import java.util.concurrent.Executors;
 public class ContentManager {
 
     protected static int THREADS = 1;
-    private static ContentManager instance;
+    private static Map<Context, ContentManager> instancesMap = new HashMap<Context, ContentManager>();
     protected ContentResolver resolver;
     private ListeningExecutorService service;
     private Context context;
@@ -46,18 +49,30 @@ public class ContentManager {
         resolver = initResolver(context);
         shoppingListContentTransformer = initShoppingListTransformer();
         shoppingItemContentTransformer = initItemContentTransformer();
-        if (instance == null) {
-            instance = this;
+        instancesMap.put(context, this);
+    }
+
+    //This is here only, so MockContentManager could work properly.
+    private ContentResolver getContentResolver() {
+        if (resolver == null) {
+            resolver = initResolver(context);
         }
+        return resolver;
     }
 
     public static ContentManager createContentManager(Context context) {
-        instance = new ContentManager(context);
-        return instance;
+        if (instancesMap.containsKey(context)) {
+            return instancesMap.get(context);
+        }
+        return new ContentManager(context);
     }
 
     public static Optional<ContentManager> getExistingManager() {
-        return Optional.fromNullable(instance);
+        Iterator<ContentManager> iterator = instancesMap.values().iterator();
+        if (iterator.hasNext()) {
+            return Optional.fromNullable(iterator.next());
+        }
+        return Optional.absent();
     }
 
     private ItemContentTransformer initItemContentTransformer() {
@@ -76,7 +91,7 @@ public class ContentManager {
         return service.submit(new Callable<DataModel<ShoppingList>>() {
             @Override
             public DataModel<ShoppingList> call() throws Exception {
-                Cursor cursor = resolver.query(ShoppingProviderContract.LIST_URI, null, null, null, null);
+                Cursor cursor = getContentResolver().query(ShoppingProviderContract.LIST_URI, null, null, null, null);
                 List<ShoppingList> list = shoppingListContentTransformer.transformCursor(cursor);
                 return new ListMapDataModel<ShoppingList>(list);
             }
@@ -93,7 +108,7 @@ public class ContentManager {
             @Override
             public Optional<ShoppingList> call() throws Exception {
                 Uri uri = ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, id);
-                Cursor cursor = resolver.query(uri, null, null, null, null);
+                Cursor cursor = getContentResolver().query(uri, null, null, null, null);
                 List<ShoppingList> list = shoppingListContentTransformer.transformCursor(cursor);
                 if (list.size() > 0) {
                     return Optional.of(list.get(0));
@@ -108,7 +123,7 @@ public class ContentManager {
             @Override
             public Integer call() throws Exception {
                 Uri uri = ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, list.getId());
-                return resolver.delete(uri, null, null);
+                return getContentResolver().delete(uri, null, null);
             }
         });
     }
@@ -119,11 +134,11 @@ public class ContentManager {
             public Uri call() throws Exception {
                 ContentValues values = shoppingListContentTransformer.transformValue(list);
                 if (list.isNewList()) {
-                    Uri uri = resolver.insert(ShoppingProviderContract.LIST_URI, values);
+                    Uri uri = getContentResolver().insert(ShoppingProviderContract.LIST_URI, values);
                     addListToFactory(uri, list);
                     return uri;
                 } else {
-                    resolver.update(
+                    getContentResolver().update(
                             ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, list.getId()),
                             values,
                             null,
@@ -156,7 +171,7 @@ public class ContentManager {
     }
 
     protected void insertNewItem(ContentValues values, ShoppingItem item) {
-        Uri uri = resolver.insert(ShoppingProviderContract.ITEMS_URI, values);
+        Uri uri = getContentResolver().insert(ShoppingProviderContract.ITEMS_URI, values);
         long id = Long.parseLong(uri.getLastPathSegment());
         item.newItem = false;
         item.id = id;
@@ -164,7 +179,7 @@ public class ContentManager {
 
     protected void updateOldItem(ContentValues values, ShoppingItem item) {
         Uri uri = ContentUris.withAppendedId(ShoppingProviderContract.ITEMS_URI, item.id);
-        resolver.update(uri, values, null, null);
+        getContentResolver().update(uri, values, null, null);
     }
 
     public ListenableFuture<Integer> remove(final ShoppingItem item) {
@@ -172,7 +187,7 @@ public class ContentManager {
             @Override
             public Integer call() throws Exception {
                 Uri uri = ContentUris.withAppendedId(ShoppingProviderContract.ITEMS_URI, item.id);
-                return resolver.delete(uri, null, null);
+                return getContentResolver().delete(uri, null, null);
             }
         });
     }
@@ -181,7 +196,7 @@ public class ContentManager {
         return service.submit(new Callable<DataModel<ShoppingItem>>() {
             @Override
             public DataModel<ShoppingItem> call() throws Exception {
-                Cursor cursor = resolver.query(ShoppingProviderContract.ITEMS_URI, null,
+                Cursor cursor = getContentResolver().query(ShoppingProviderContract.ITEMS_URI, null,
                         ItemsTable.C_LIST_ID + " = ?", new String[]{list_id + ""}, null);
                 List<ShoppingItem> list = shoppingItemContentTransformer.transformCursor(cursor);
                 return new ListMapDataModel<ShoppingItem>(list);

@@ -30,6 +30,7 @@ public class ContentManagerTests extends ProviderTestCase2<ShoppingListProvider>
     public void setUp() throws Exception {
         super.setUp();
         mockContentResolver = getMockContentResolver();
+        //TODO: find out why resolver is null
         manager = new MockContentManager(mockContentResolver);
         ShoppingListFactory.clearLists();
     }

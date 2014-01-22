@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import net.sledzdev.shoppinglist.R;
+import net.sledzdev.shoppinglist.event.EventBusFactory;
+import net.sledzdev.shoppinglist.event.ListDeleteEvent;
 import net.sledzdev.shoppinglist.model.ShoppingList;
 
 /**
@@ -20,14 +22,24 @@ public class ShoppingListsAdapter extends DataModelAdapter<ShoppingList> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //TODO: add event listeners
         ShoppingListHolder holder = getShoppingListHolder(convertView, parent);
 
         ShoppingList list = (ShoppingList) getItem(position);
 
+        setListeners(holder, list);
+
         holder.listName.setText(list.name);
 
         return holder.main;
+    }
+
+    private void setListeners(ShoppingListHolder holder, final ShoppingList list) {
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBusFactory.getEventBus().post(new ListDeleteEvent(list.getId(), ShoppingListsAdapter.this));
+            }
+        });
     }
 
     private ShoppingListHolder getShoppingListHolder(View convertView, ViewGroup parent) {

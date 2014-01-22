@@ -42,6 +42,17 @@ public abstract class DataModelAdapter<T extends ElementWithId> extends BaseAdap
         return -1;
     }
 
+    public void deleteItem(long id) {
+        Optional<T> maybeItem = model.getAtId(id);
+        if (maybeItem.isPresent()) {
+            model.removeElement(maybeItem.get());
+        }
+    }
+
+    public void addItem(T item) {
+        model.addElement(item);
+    }
+
     protected LayoutInflater getInflater() {
         return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

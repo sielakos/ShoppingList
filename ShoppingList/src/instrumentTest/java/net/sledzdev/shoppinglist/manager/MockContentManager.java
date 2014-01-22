@@ -12,6 +12,11 @@ public class MockContentManager extends ContentManager {
 
     public MockContentManager(ContentResolver mockContentResolver) {
         super(null);
+
+        if (mockContentResolver == null) {
+            throw new IllegalArgumentException("null resolver");
+        }
+
         this.mockContentResolver = mockContentResolver;
     }
 

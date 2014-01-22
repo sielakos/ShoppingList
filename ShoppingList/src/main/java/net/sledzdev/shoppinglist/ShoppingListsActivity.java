@@ -3,8 +3,12 @@ package net.sledzdev.shoppinglist;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.google.common.eventbus.EventBus;
+
 import net.sledzdev.shoppinglist.event.EventBusFactory;
-import net.sledzdev.shoppinglist.event.ListSelectedEvent;
+import net.sledzdev.shoppinglist.handlers.ListDeleteHandler;
+import net.sledzdev.shoppinglist.handlers.ListSelectedEventHandler;
+import net.sledzdev.shoppinglist.manager.ContentManager;
 
 
 /**
@@ -27,6 +31,7 @@ public class ShoppingListsActivity extends FragmentActivity {
      * device.
      */
     private boolean mTwoPane;
+    private ContentManager contentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +56,13 @@ public class ShoppingListsActivity extends FragmentActivity {
     }
 
     private void registerListeners() {
+        EventBus eventBus = EventBusFactory.getEventBus();
+
         ListSelectedEventHandler listSelectedEventHandler = new ListSelectedEventHandler(this);
-        EventBusFactory.getEventBus().register(listSelectedEventHandler);
+        eventBus.register(listSelectedEventHandler);
+
+        ListDeleteHandler listDeleteHandler = new ListDeleteHandler(this);
+        eventBus.register(listDeleteHandler);
     }
 
     public boolean ismTwoPane() {
