@@ -16,6 +16,7 @@ import net.sledzdev.shoppinglist.adapter.ShoppingListsAdapter;
 import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.event.ListSelectedEvent;
 import net.sledzdev.shoppinglist.manager.ContentManager;
+import net.sledzdev.shoppinglist.manager.OnUiThreadFutureCallback;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
 import net.sledzdev.shoppinglist.model.ShoppingItemBuilder;
 import net.sledzdev.shoppinglist.model.ShoppingList;
@@ -78,9 +79,9 @@ public class ShoppingListsFragment extends ListFragment {
         initMockData();
 
         ListenableFuture<DataModel<ShoppingList>> future = contentManager.loadShoppingListsModel();
-        Futures.addCallback(future, new FutureCallback<DataModel<ShoppingList>>() {
+        Futures.addCallback(future, new OnUiThreadFutureCallback<DataModel<ShoppingList>>(getActivity()) {
             @Override
-            public void onSuccess(DataModel<ShoppingList> shoppingLists) {
+            protected void onSuccessUiThread(DataModel<ShoppingList> shoppingLists) {
                 ShoppingListsAdapter shoppingListsAdapter = new ShoppingListsAdapter(getActivity(), shoppingLists);
                 setListAdapter(shoppingListsAdapter);
             }

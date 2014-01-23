@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import com.google.common.eventbus.EventBus;
 
 import net.sledzdev.shoppinglist.event.EventBusFactory;
-import net.sledzdev.shoppinglist.handlers.ListDeleteHandler;
+import net.sledzdev.shoppinglist.handlers.ListDeleteEventHandler;
 import net.sledzdev.shoppinglist.handlers.ListSelectedEventHandler;
 import net.sledzdev.shoppinglist.manager.ContentManager;
 
@@ -18,11 +18,11 @@ import net.sledzdev.shoppinglist.manager.ContentManager;
  * lead to a {@link ShoppingListDetailActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
- * <p>
+ * <p/>
  * The activity makes heavy use of fragments. The list of items is a
  * {@link ShoppingListsFragment} and the item details
  * (if present) is a {@link ShoppingListDetailFragment}.
- * <p>
+ * <p/>
  */
 public class ShoppingListsActivity extends FragmentActivity {
 
@@ -37,6 +37,7 @@ public class ShoppingListsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shoppinglist_list);
+        contentManager = ContentManager.createContentManager(this);
 
         registerListeners();
 
@@ -61,11 +62,15 @@ public class ShoppingListsActivity extends FragmentActivity {
         ListSelectedEventHandler listSelectedEventHandler = new ListSelectedEventHandler(this);
         eventBus.register(listSelectedEventHandler);
 
-        ListDeleteHandler listDeleteHandler = new ListDeleteHandler(this);
+        ListDeleteEventHandler listDeleteHandler = new ListDeleteEventHandler(this);
         eventBus.register(listDeleteHandler);
     }
 
     public boolean ismTwoPane() {
         return mTwoPane;
+    }
+
+    public ContentManager getContentManager() {
+        return contentManager;
     }
 }

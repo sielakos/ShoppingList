@@ -128,6 +128,16 @@ public class ContentManager {
         });
     }
 
+    public ListenableFuture<Integer> removeList(final long id) {
+        return service.submit(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                Uri uri = ContentUris.withAppendedId(ShoppingProviderContract.LIST_URI, id);
+                return getContentResolver().delete(uri, null, null);
+            }
+        });
+    }
+
     public ListenableFuture<Uri> save(final ShoppingList list) {
         return service.submit(new Callable<Uri>() {
             @Override
@@ -187,6 +197,16 @@ public class ContentManager {
             @Override
             public Integer call() throws Exception {
                 Uri uri = ContentUris.withAppendedId(ShoppingProviderContract.ITEMS_URI, item.id);
+                return getContentResolver().delete(uri, null, null);
+            }
+        });
+    }
+
+    public ListenableFuture<Integer> removeItem(final long id) {
+        return service.submit(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                Uri uri = ContentUris.withAppendedId(ShoppingProviderContract.ITEMS_URI, id);
                 return getContentResolver().delete(uri, null, null);
             }
         });

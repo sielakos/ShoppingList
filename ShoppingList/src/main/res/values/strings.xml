@@ -2,16 +2,11 @@
 <resources>
 
     <string name="app_name">ShoppingList</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
     <string name="title_shoppinglist_list">Lists</string>
     <string name="title_shoppinglist_detail">Shopping List Detail</string>
     <string name="item_default_name">item</string>
     <string name="item_default_price">1.25</string>
+    <string name="empty_list">Empty List</string>
 
 </resources>

@@ -1,5 +1,7 @@
+TODO: finish view change animations for tablets
 TODO: replace old event with eventbus
 TODO: add checked field in database
+TODO: animations
 TODO: avoid states by using text fields intead of text views
 TODO: button to add list
 TODO: activity to add/edit list

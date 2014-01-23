@@ -47,10 +47,12 @@ public abstract class DataModelAdapter<T extends ElementWithId> extends BaseAdap
         if (maybeItem.isPresent()) {
             model.removeElement(maybeItem.get());
         }
+        notifyDataSetInvalidated();
     }
 
     public void addItem(T item) {
         model.addElement(item);
+        notifyDataSetInvalidated();
     }
 
     protected LayoutInflater getInflater() {

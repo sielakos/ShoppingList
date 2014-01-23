@@ -8,4 +8,5 @@
     <dimen name="navigation_drawer_width">240dp</dimen>
 
     <dimen name="list_element_font_size">24sp</dimen>
+    <dimen name="empty_list_string_size">40sp</dimen>
 </resources>
