@@ -12,19 +12,21 @@ public class ItemsTable {
     public static final String C_NAME = "name";
     public static final String C_LIST_ID = "list_id";
     public static final String C_PRICE = "price";
+    public static final String C_CHECKED = "checked";
 
     private static final String CREATE_QUERY = "CREATE TABLE " +
             TABLE_NAME + "(" +
             C_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             C_NAME + " TEXT, " +
             C_LIST_ID + " INTEGER, " +
-            C_PRICE + " REAL, "+
+            C_PRICE + " REAL, " +
+            C_CHECKED + " INTEGER, " +
             "FOREIGN KEY(" + C_LIST_ID + ") REFERENCES " +
             ListsTable.TABLE_NAME + "(" + ListsTable.C_ID + ")" +
             ");";
 
     public static final String[] ALLOWED_COLUMNS = new String[] {
-      C_ID, C_NAME, C_PRICE, C_LIST_ID
+      C_ID, C_NAME, C_PRICE, C_LIST_ID, C_CHECKED
     };
 
     public static void onCreate(SQLiteDatabase database) {

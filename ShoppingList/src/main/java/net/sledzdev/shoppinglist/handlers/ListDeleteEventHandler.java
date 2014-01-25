@@ -36,12 +36,12 @@ public class ListDeleteEventHandler {
                 shoppingFragment = activity.findViewById(R.id.shoppping_fragment);
             }
 
-            emptyView.animate().setDuration(ANIM_DURATION).alpha(0).setListener(new AnimatorListenerAdapter() {
+            shoppingFragment.animate().setDuration(ANIM_DURATION).alpha(0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    emptyView.setAlpha(1);
-                    emptyView.setVisibility(View.GONE);
-                    shoppingFragment.setVisibility(View.VISIBLE);
+                    shoppingFragment.setAlpha(1);
+                    shoppingFragment.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
                 }
             });
         }

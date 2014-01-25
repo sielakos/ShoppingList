@@ -10,13 +10,15 @@ public class ShoppingItem implements ElementWithId {
     public String name;
     public ShoppingList list;
     public double price;
+    public boolean checked;
     public boolean newItem;
 
-    public ShoppingItem(long id, String name, double price, ShoppingList list, boolean newItem) {
+    public ShoppingItem(long id, String name, ShoppingList list, double price, boolean checked, boolean newItem) {
         this.id = id;
         this.name = name;
-        this.price = price;
         this.list = list;
+        this.price = price;
+        this.checked = checked;
         this.newItem = newItem;
     }
 
@@ -32,6 +34,7 @@ public class ShoppingItem implements ElementWithId {
                 ", name='" + name + '\'' +
                 ", list=" + list +
                 ", price=" + price +
+                ", checked=" + checked +
                 ", newItem=" + newItem +
                 '}';
     }

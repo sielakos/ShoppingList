@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="delete_red">#ff0014</color>
-    <color name="empty_gray">#404040</color>
+    <color name="empty_gray">#808080</color>
 </resources>

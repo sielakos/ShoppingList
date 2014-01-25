@@ -1,11 +1,8 @@
-TODO: finish view change animations for tablets
-TODO: replace old event with eventbus
-TODO: add checked field in database
-TODO: animations
-TODO: avoid states by using text fields intead of text views
+TODO: removing items
+TODO: editing elements
 TODO: button to add list
-TODO: activity to add/edit list
-TODO: "remove" button in list context menu
-TODO: "edit" button in list context menu
+TODO: add item
+TODO: clear list action
+TODO: animations
 TODO: think about other UI elements
 TODO: espresso tests

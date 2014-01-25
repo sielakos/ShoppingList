@@ -1,13 +1,18 @@
 package net.sledzdev.shoppinglist.adapter;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import net.sledzdev.shoppinglist.R;
+import net.sledzdev.shoppinglist.event.EventBusFactory;
+import net.sledzdev.shoppinglist.event.ItemDeleteEvent;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
 
 /**
@@ -21,15 +26,26 @@ public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //TODO: add event listeners
         ShoppingItemHolder holder = getShoppingItemHolder(convertView, parent);
 
-        ShoppingItem item = (ShoppingItem) getItem(position);
+        final ShoppingItem item = (ShoppingItem) getItem(position);
 
-        holder.itemName.setText(item.name);
-        holder.price.setText(item.price + "");
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBusFactory.getEventBus().post(new ItemDeleteEvent(item, ItemAdapter.this));
+            }
+        });
+
+        setValues(holder, item);
 
         return holder.main;
+    }
+
+    private void setValues(ShoppingItemHolder holder, ShoppingItem item) {
+        holder.itemName.setText(item.name);
+        holder.price.setText(item.price + "");
+        holder.check.setChecked(item.checked);
     }
 
     private ShoppingItemHolder getShoppingItemHolder(View convertView, ViewGroup parent) {
@@ -41,10 +57,11 @@ public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
             View main = getInflater().inflate(R.layout.shoping_item_element, parent, false);
 
             holder.main = main;
-            holder.itemName = (TextView) main.findViewById(R.id.item_name);
+            holder.itemName = (EditText) main.findViewById(R.id.item_name);
+            holder.price = (EditText) main.findViewById(R.id.item_price);
             holder.delete = (Button) main.findViewById(R.id.delete_item);
             holder.check = (CheckBox) main.findViewById(R.id.check_item);
-            holder.price = (TextView) main.findViewById(R.id.item_price);
+
             main.setTag(holder);
         }
         return holder;
@@ -53,9 +70,9 @@ public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
 
     public static class ShoppingItemHolder {
         public View main;
-        public TextView itemName;
+        public EditText itemName;
         public Button delete;
         public CheckBox check;
-        public TextView price;
+        public EditText price;
     }
 }

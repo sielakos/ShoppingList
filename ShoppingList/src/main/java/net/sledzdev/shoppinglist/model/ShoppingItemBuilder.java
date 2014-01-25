@@ -25,6 +25,7 @@ public class ShoppingItemBuilder {
     private double price = 0.0;
     private ShoppingList list;
     private long list_id = -1;
+    private boolean checked = false;
 
     public ShoppingItemBuilder setId(long id) {
         this.id = id;
@@ -49,6 +50,15 @@ public class ShoppingItemBuilder {
     public ShoppingItemBuilder setList_id(long list_id) {
         this.list_id = list_id;
         return this;
+    }
+
+    public ShoppingItemBuilder setChecked(boolean checked) {
+        this.checked = checked;
+        return this;
+    }
+
+    public ShoppingItemBuilder setChecked(int checked) {
+        return setChecked(checked == 1);
     }
 
     public ShoppingItem createShoppingItem() {
@@ -82,7 +92,7 @@ public class ShoppingItemBuilder {
     }
 
     protected ShoppingItem createNewItem() {
-        ShoppingItem item = new ShoppingItem(id, name, price, list, id == -1);
+        ShoppingItem item = new ShoppingItem(id, name, list, price, checked, id == -1);
         createdItems.add(item);
         put(item);
         return item;

@@ -30,10 +30,13 @@ public class ItemContentTransformer implements ContentTransformer<ShoppingItem> 
 
     protected ShoppingItem getShoppingItem(Cursor cursor) {
         ShoppingItemBuilder builder = new ShoppingItemBuilder();
+
         builder.setId(cursor.getLong(cursor.getColumnIndexOrThrow(ItemsTable.C_ID)))
                .setList_id(cursor.getLong(cursor.getColumnIndexOrThrow(ItemsTable.C_LIST_ID)))
                .setName(cursor.getString(cursor.getColumnIndexOrThrow(ItemsTable.C_NAME)))
-               .setPrice(cursor.getDouble(cursor.getColumnIndexOrThrow(ItemsTable.C_PRICE)));
+               .setPrice(cursor.getDouble(cursor.getColumnIndexOrThrow(ItemsTable.C_PRICE)))
+               .setChecked(cursor.getInt(cursor.getColumnIndexOrThrow(ItemsTable.C_CHECKED)));
+
         return builder.createShoppingItem();
     }
 
@@ -43,6 +46,7 @@ public class ItemContentTransformer implements ContentTransformer<ShoppingItem> 
 
         values.put(ItemsTable.C_NAME, item.name);
         values.put(ItemsTable.C_PRICE, item.price);
+        values.put(ItemsTable.C_CHECKED, item.checked ? 1 : 0);
         values.put(ItemsTable.C_LIST_ID, item.list.getId());
 
         return values;
