@@ -6,21 +6,21 @@
     android:baselineAligned="false"
     android:weightSum="1">
 
-    <TextView
+    <EditText
+        android:id="@+id/listTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="List Title"
-        android:id="@+id/listTitle"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.03"
         android:gravity="center"
         android:textStyle="bold"
-        android:textColor="#ff8b00" />
+        android:textColor="@color/list_title" />
 
     <ListView
+        android:id="@+id/items"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/items"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

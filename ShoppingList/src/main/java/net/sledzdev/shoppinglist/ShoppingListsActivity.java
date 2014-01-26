@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import com.google.common.eventbus.EventBus;
 
 import net.sledzdev.shoppinglist.event.EventBusFactory;
+import net.sledzdev.shoppinglist.handlers.ItemDeleteEventHandler;
 import net.sledzdev.shoppinglist.handlers.ListDeleteEventHandler;
 import net.sledzdev.shoppinglist.handlers.ListSelectedEventHandler;
 import net.sledzdev.shoppinglist.manager.ContentManager;
@@ -64,6 +65,9 @@ public class ShoppingListsActivity extends FragmentActivity {
 
         ListDeleteEventHandler listDeleteHandler = new ListDeleteEventHandler(this);
         eventBus.register(listDeleteHandler);
+
+        ItemDeleteEventHandler itemDeleteEventHandler = new ItemDeleteEventHandler(this);
+        eventBus.register(itemDeleteEventHandler);
     }
 
     public boolean ismTwoPane() {

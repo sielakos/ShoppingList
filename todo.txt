@@ -1,8 +1,9 @@
-TODO: removing items
 TODO: editing elements
-TODO: button to add list
+TODO: add list
 TODO: add item
+TODO: remove mock data creation
 TODO: clear list action
 TODO: animations
 TODO: think about other UI elements
 TODO: espresso tests
+TODO: reminder functionality

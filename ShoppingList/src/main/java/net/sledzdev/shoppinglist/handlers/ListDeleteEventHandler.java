@@ -45,5 +45,7 @@ public class ListDeleteEventHandler {
                 }
             });
         }
+
+        //TODO: list animation
     }
 }

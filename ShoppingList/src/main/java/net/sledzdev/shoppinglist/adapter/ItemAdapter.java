@@ -30,16 +30,20 @@ public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
 
         final ShoppingItem item = (ShoppingItem) getItem(position);
 
+        addEvents(holder, item);
+
+        setValues(holder, item);
+
+        return holder.main;
+    }
+
+    private void addEvents(ShoppingItemHolder holder, final ShoppingItem item) {
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EventBusFactory.getEventBus().post(new ItemDeleteEvent(item, ItemAdapter.this));
             }
         });
-
-        setValues(holder, item);
-
-        return holder.main;
     }
 
     private void setValues(ShoppingItemHolder holder, ShoppingItem item) {

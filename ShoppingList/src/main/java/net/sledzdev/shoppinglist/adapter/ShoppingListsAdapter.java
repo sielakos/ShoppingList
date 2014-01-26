@@ -6,9 +6,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.common.eventbus.Subscribe;
+
 import net.sledzdev.shoppinglist.R;
 import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.event.ListDeleteEvent;
+import net.sledzdev.shoppinglist.event.ListTitleChangedEvent;
 import net.sledzdev.shoppinglist.model.ShoppingList;
 
 /**
@@ -18,6 +21,13 @@ public class ShoppingListsAdapter extends DataModelAdapter<ShoppingList> {
 
     public ShoppingListsAdapter(Context context, DataModel<ShoppingList> model) {
         super(context, model);
+
+        EventBusFactory.getEventBus().register(this);
+    }
+
+    @Subscribe
+    public void onListTitleChanged(ListTitleChangedEvent event) {
+        notifyDataSetChanged();
     }
 
     @Override
