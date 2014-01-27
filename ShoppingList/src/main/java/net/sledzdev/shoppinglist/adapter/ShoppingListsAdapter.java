@@ -11,7 +11,7 @@ import com.google.common.eventbus.Subscribe;
 import net.sledzdev.shoppinglist.R;
 import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.event.ListDeleteEvent;
-import net.sledzdev.shoppinglist.event.ListTitleChangedEvent;
+import net.sledzdev.shoppinglist.event.UpdateListAdapterEvent;
 import net.sledzdev.shoppinglist.model.ShoppingList;
 
 /**
@@ -26,7 +26,7 @@ public class ShoppingListsAdapter extends DataModelAdapter<ShoppingList> {
     }
 
     @Subscribe
-    public void onListTitleChanged(ListTitleChangedEvent event) {
+    public void onListTitleChanged(UpdateListAdapterEvent event) {
         notifyDataSetChanged();
     }
 

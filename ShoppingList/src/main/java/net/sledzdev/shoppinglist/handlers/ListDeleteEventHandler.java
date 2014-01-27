@@ -30,7 +30,7 @@ public class ListDeleteEventHandler {
         event.adapter.deleteItem(event.listId);
         activity.getContentManager().removeList(event.listId);
 
-        if (activity.ismTwoPane()) {
+        if (activity.ismTwoPane() && isSameItem(event)) {
             if (emptyView == null) {
                 emptyView = activity.findViewById(R.id.empty_list);
                 shoppingFragment = activity.findViewById(R.id.shoppping_fragment);
@@ -47,5 +47,9 @@ public class ListDeleteEventHandler {
         }
 
         //TODO: list animation
+    }
+
+    private boolean isSameItem(ListDeleteEvent event) {
+        return activity.getCurrentListId() == event.listId;
     }
 }

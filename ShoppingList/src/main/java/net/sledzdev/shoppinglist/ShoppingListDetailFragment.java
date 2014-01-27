@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -23,8 +24,11 @@ import net.sledzdev.shoppinglist.adapter.DataModel;
 import net.sledzdev.shoppinglist.adapter.ItemAdapter;
 import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.event.ListTitleChangedEvent;
+import net.sledzdev.shoppinglist.event.TextWatcherAdapter;
+import net.sledzdev.shoppinglist.handlers.ItemNameChangedEventHandler;
 import net.sledzdev.shoppinglist.handlers.ListTitleChangedEventHandler;
 import net.sledzdev.shoppinglist.manager.ContentManager;
+import net.sledzdev.shoppinglist.manager.OnUiThreadFutureCallback;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
 import net.sledzdev.shoppinglist.model.ShoppingList;
 
@@ -43,7 +47,9 @@ public class ShoppingListDetailFragment extends Fragment {
     }
 
     private void registerEventHandlers() {
-        EventBusFactory.getEventBus().register(new ListTitleChangedEventHandler());
+        final EventBus eventBus = EventBusFactory.getEventBus();
+        eventBus.register(new ListTitleChangedEventHandler());
+        eventBus.register(new ItemNameChangedEventHandler(manager));
     }
 
     @Override
@@ -99,9 +105,10 @@ public class ShoppingListDetailFragment extends Fragment {
 
     private void populateItemsList(ShoppingList list, final ListView items) {
         ListenableFuture<DataModel<ShoppingItem>> future = manager.loadItems(list);
-        Futures.addCallback(future, new FutureCallback<DataModel<ShoppingItem>>() {
+        Futures.addCallback(future, new OnUiThreadFutureCallback<DataModel<ShoppingItem>>(getActivity()) {
+
             @Override
-            public void onSuccess(DataModel<ShoppingItem> shoppingItems) {
+            protected void onSuccessUiThread(DataModel<ShoppingItem> shoppingItems) {
                 if (getActivity() != null) {
                     ListAdapter listAdapter = new ItemAdapter(getActivity(), shoppingItems);
                     items.setAdapter(listAdapter);
@@ -116,17 +123,7 @@ public class ShoppingListDetailFragment extends Fragment {
     }
 
     private void addEventListeners(final ShoppingList list, final EditText listTitle) {
-        listTitle.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+        listTitle.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 EventBusFactory.getEventBus().post(new ListTitleChangedEvent(manager, list, listTitle.getText().toString()));

@@ -52,7 +52,7 @@ public class ShoppingListDetailActivity extends FragmentActivity {
 
     private void registerListeners() {
         EventBus eventBus = EventBusFactory.getEventBus();
-        eventBus.register(new ItemDeleteEventHandler(this));
+        eventBus.register(new ItemDeleteEventHandler(contentManager));
     }
 
     @Override

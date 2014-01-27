@@ -29,6 +29,9 @@ public class ListSelectedEventHandler {
     @Subscribe
     public void onItemSelected(ListSelectedEvent event) {
         long id = event.selectId;
+
+        shoppingListsActivity.setCurrentListId(id);
+
         Bundle arguments = new Bundle();
         arguments.putLong(ShoppingListDetailFragment.LIST_ID, id);
 
