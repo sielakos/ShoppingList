@@ -9,6 +9,7 @@ import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.handlers.ItemDeleteEventHandler;
 import net.sledzdev.shoppinglist.handlers.ListDeleteEventHandler;
 import net.sledzdev.shoppinglist.handlers.ListSelectedEventHandler;
+import net.sledzdev.shoppinglist.handlers.NewListEventHandler;
 import net.sledzdev.shoppinglist.manager.ContentManager;
 
 public class ShoppingListsActivity extends FragmentActivity {
@@ -45,6 +46,9 @@ public class ShoppingListsActivity extends FragmentActivity {
 
         ItemDeleteEventHandler itemDeleteEventHandler = new ItemDeleteEventHandler(contentManager);
         eventBus.register(itemDeleteEventHandler);
+
+        NewListEventHandler newListEventHandler = new NewListEventHandler(contentManager, getResources());
+        eventBus.register(newListEventHandler);
     }
 
     public boolean ismTwoPane() {
