@@ -8,5 +8,6 @@
     <string name="item_default_name">item</string>
     <string name="item_default_price">1.25</string>
     <string name="empty_list">Empty List</string>
+    <string name="new_list">add new list</string>
 
 </resources>

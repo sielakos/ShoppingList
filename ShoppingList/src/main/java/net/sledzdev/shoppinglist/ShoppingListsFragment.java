@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -41,6 +44,7 @@ public class ShoppingListsFragment extends ListFragment {
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
     private ContentManager contentManager;
+    private Button newListBtn;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -55,8 +59,16 @@ public class ShoppingListsFragment extends ListFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.shopping_lists, container);
+        newListBtn = (Button) rootView.findViewById(R.id.new_list);
+        return rootView;
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null

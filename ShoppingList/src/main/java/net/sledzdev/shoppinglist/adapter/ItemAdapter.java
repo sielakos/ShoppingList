@@ -1,19 +1,13 @@
 package net.sledzdev.shoppinglist.adapter;
 
 import android.content.Context;
-import android.text.Editable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.google.common.eventbus.EventBus;
-
 import net.sledzdev.shoppinglist.R;
-import net.sledzdev.shoppinglist.event.EventBusFactory;
-import net.sledzdev.shoppinglist.event.ItemDeleteEvent;
-import net.sledzdev.shoppinglist.event.ItemNameChangedEvent;
 import net.sledzdev.shoppinglist.event.TextWatcherAdapter;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
 
@@ -21,6 +15,9 @@ import net.sledzdev.shoppinglist.model.ShoppingItem;
  * Created by Mariusz on 22.12.13.
  */
 public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
+
+    private final ItemAdapterEventController itemAdapterEventController = new ItemAdapterEventController(this);
+
 
     public ItemAdapter(Context context, DataModel<ShoppingItem> model) {
         super(context, model);
@@ -32,7 +29,7 @@ public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
 
         final ShoppingItem item = (ShoppingItem) getItem(position);
 
-        addEvents(holder, item);
+        itemAdapterEventController.addEvents(holder, item);
 
         setValues(holder, item);
 
@@ -59,21 +56,7 @@ public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
     }
 
     private void addEvents(ShoppingItemHolder holder, final ShoppingItem item) {
-        final EventBus eventBus = EventBusFactory.getEventBus();
-
-        holder.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                eventBus.post(new ItemDeleteEvent(item, ItemAdapter.this));
-            }
-        });
-
-        holder.itemName.addTextChangedListener(new TextWatcherAdapter() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                eventBus.post(new ItemNameChangedEvent(item, ItemAdapter.this, s.toString()));
-            }
-        });
+        itemAdapterEventController.addEvents(holder, item);
     }
 
     private void setValues(ShoppingItemHolder holder, ShoppingItem item) {
@@ -81,7 +64,6 @@ public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
         holder.price.setText(item.price + "");
         holder.check.setChecked(item.checked);
     }
-
 
     public static class ShoppingItemHolder {
         public View main;

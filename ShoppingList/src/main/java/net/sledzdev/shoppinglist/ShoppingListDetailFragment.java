@@ -25,7 +25,9 @@ import net.sledzdev.shoppinglist.adapter.ItemAdapter;
 import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.event.ListTitleChangedEvent;
 import net.sledzdev.shoppinglist.event.TextWatcherAdapter;
+import net.sledzdev.shoppinglist.handlers.ItemCheckedChangeEventHandler;
 import net.sledzdev.shoppinglist.handlers.ItemNameChangedEventHandler;
+import net.sledzdev.shoppinglist.handlers.ItemPriceChangeEventHandler;
 import net.sledzdev.shoppinglist.handlers.ListTitleChangedEventHandler;
 import net.sledzdev.shoppinglist.manager.ContentManager;
 import net.sledzdev.shoppinglist.manager.OnUiThreadFutureCallback;
@@ -50,6 +52,8 @@ public class ShoppingListDetailFragment extends Fragment {
         final EventBus eventBus = EventBusFactory.getEventBus();
         eventBus.register(new ListTitleChangedEventHandler());
         eventBus.register(new ItemNameChangedEventHandler(manager));
+        eventBus.register(new ItemPriceChangeEventHandler(manager));
+        eventBus.register(new ItemCheckedChangeEventHandler(manager));
     }
 
     @Override
