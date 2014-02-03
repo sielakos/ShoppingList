@@ -58,4 +58,8 @@ public abstract class DataModelAdapter<T extends ElementWithId> extends BaseAdap
     protected LayoutInflater getInflater() {
         return (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
+
+    public DataModel<T> getModel() {
+        return model;
+    }
 }

@@ -1,9 +1,8 @@
-TODO: editing elements
-TODO: add list
-TODO: add item
-TODO: remove mock data creation
 TODO: clear list action
-TODO: animations
+TODO: fix error with scrolling item list
+TODO: animations and styles
 TODO: think about other UI elements
 TODO: espresso tests
+TODO: minimize number of events
 TODO: reminder functionality
+TODO: translate to polish

@@ -4,15 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
@@ -22,13 +21,18 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import net.sledzdev.shoppinglist.adapter.DataModel;
 import net.sledzdev.shoppinglist.adapter.ItemAdapter;
+import net.sledzdev.shoppinglist.event.ClearListEvent;
 import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.event.ListTitleChangedEvent;
+import net.sledzdev.shoppinglist.event.NewItemEvent;
+import net.sledzdev.shoppinglist.event.NewListEvent;
 import net.sledzdev.shoppinglist.event.TextWatcherAdapter;
+import net.sledzdev.shoppinglist.handlers.ClearListEventHandler;
 import net.sledzdev.shoppinglist.handlers.ItemCheckedChangeEventHandler;
 import net.sledzdev.shoppinglist.handlers.ItemNameChangedEventHandler;
 import net.sledzdev.shoppinglist.handlers.ItemPriceChangeEventHandler;
 import net.sledzdev.shoppinglist.handlers.ListTitleChangedEventHandler;
+import net.sledzdev.shoppinglist.handlers.NewItemEventHandler;
 import net.sledzdev.shoppinglist.manager.ContentManager;
 import net.sledzdev.shoppinglist.manager.OnUiThreadFutureCallback;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
@@ -38,6 +42,8 @@ public class ShoppingListDetailFragment extends Fragment {
     public static final String LIST_ID = "shopping_list_id";
 
     private ContentManager manager;
+    private ItemAdapter currentItemAdapter;
+    private ListDetailViews listDetailViews;
 
     @Override
     public void onAttach(Activity activity) {
@@ -54,6 +60,8 @@ public class ShoppingListDetailFragment extends Fragment {
         eventBus.register(new ItemNameChangedEventHandler(manager));
         eventBus.register(new ItemPriceChangeEventHandler(manager));
         eventBus.register(new ItemCheckedChangeEventHandler(manager));
+        eventBus.register(new ClearListEventHandler(getActivity()));
+        eventBus.register(new NewItemEventHandler(getActivity()));
     }
 
     @Override
@@ -97,14 +105,16 @@ public class ShoppingListDetailFragment extends Fragment {
     private void initViewsForList(View rootView, Optional<ShoppingList> shoppingListOptional) {
         final ShoppingList list = shoppingListOptional.get();
 
-        final EditText listTitle = (EditText) rootView.findViewById(R.id.listTitle);
-        final ListView items = (ListView) rootView.findViewById(R.id.items);
+        listDetailViews = new ListDetailViews(rootView).invoke();
 
-        listTitle.setText(list.name);
+        updateViews(list);
 
-        populateItemsList(list, items);
+        addEventListeners(list);
+    }
 
-        addEventListeners(list, listTitle);
+    private void updateViews(ShoppingList list) {
+        listDetailViews.getListTitle().setText(list.name);
+        populateItemsList(list, listDetailViews.getItems());
     }
 
     private void populateItemsList(ShoppingList list, final ListView items) {
@@ -114,8 +124,8 @@ public class ShoppingListDetailFragment extends Fragment {
             @Override
             protected void onSuccessUiThread(DataModel<ShoppingItem> shoppingItems) {
                 if (getActivity() != null) {
-                    ListAdapter listAdapter = new ItemAdapter(getActivity(), shoppingItems);
-                    items.setAdapter(listAdapter);
+                    currentItemAdapter = new ItemAdapter(getActivity(), shoppingItems);
+                    items.setAdapter(currentItemAdapter);
                 }
             }
 
@@ -126,12 +136,64 @@ public class ShoppingListDetailFragment extends Fragment {
         });
     }
 
-    private void addEventListeners(final ShoppingList list, final EditText listTitle) {
-        listTitle.addTextChangedListener(new TextWatcherAdapter() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                EventBusFactory.getEventBus().post(new ListTitleChangedEvent(manager, list, listTitle.getText().toString()));
-            }
-        });
+    private void addEventListeners(final ShoppingList list) {
+       final EventBus eventBus = EventBusFactory.getEventBus();
+
+       listDetailViews.getListTitle().addTextChangedListener(new TextWatcherAdapter() {
+           @Override
+           public void afterTextChanged(Editable s) {
+               eventBus.post(new ListTitleChangedEvent(manager, list, s.toString()));
+           }
+       });
+
+       listDetailViews.getClearList().setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+                eventBus.post(new ClearListEvent(currentItemAdapter, list, manager));
+           }
+       });
+
+       listDetailViews.getNewItem().setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+                eventBus.post(new NewItemEvent(currentItemAdapter, list, manager));
+           }
+       });
+    }
+
+    private class ListDetailViews {
+        private View rootView;
+        private EditText listTitle;
+        private ListView items;
+        private Button newItem;
+        private Button clearList;
+
+        public ListDetailViews(View rootView) {
+            this.rootView = rootView;
+        }
+
+        public EditText getListTitle() {
+            return listTitle;
+        }
+
+        public ListView getItems() {
+            return items;
+        }
+
+        public Button getNewItem() {
+            return newItem;
+        }
+
+        public Button getClearList() {
+            return clearList;
+        }
+
+        public ListDetailViews invoke() {
+            listTitle = (EditText) rootView.findViewById(R.id.listTitle);
+            items = (ListView) rootView.findViewById(R.id.items);
+            newItem = (Button) rootView.findViewById(R.id.add_new_item);
+            clearList = (Button) rootView.findViewById(R.id.clear_list);
+            return this;
+        }
     }
 }

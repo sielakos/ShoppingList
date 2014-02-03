@@ -47,7 +47,7 @@ public class ShoppingListsActivity extends FragmentActivity {
         ItemDeleteEventHandler itemDeleteEventHandler = new ItemDeleteEventHandler(contentManager);
         eventBus.register(itemDeleteEventHandler);
 
-        NewListEventHandler newListEventHandler = new NewListEventHandler(contentManager, getResources());
+        NewListEventHandler newListEventHandler = new NewListEventHandler(this);
         eventBus.register(newListEventHandler);
     }
 

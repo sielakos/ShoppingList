@@ -10,5 +10,8 @@
     <string name="empty_list">Empty List</string>
     <string name="new_list">add new list</string>
     <string name="new_list_name">new list</string>
+    <string name="new_item">new item</string>
+    <string name="clear_list">clear list</string>
+    <string name="new_item_name">new item</string>
 
 </resources>

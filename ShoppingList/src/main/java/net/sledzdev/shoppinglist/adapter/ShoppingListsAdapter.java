@@ -24,7 +24,7 @@ public class ShoppingListsAdapter extends DataModelAdapter<ShoppingList> {
         super(context, model);
 
         eventBus = EventBusFactory.getEventBus();
-        eventBus.register(this);
+        eventBus.register(new ShoppingListAdapterEventsHandler(this));
     }
 
     public EventBus getEventBus() {

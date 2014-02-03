@@ -227,4 +227,18 @@ public class ContentManager {
     public ListenableFuture<DataModel<ShoppingItem>> loadItems(final ShoppingList list) {
         return loadItems(list.getId());
     }
+
+    public ListenableFuture<Integer> clearCheckedForList(final ShoppingList list) {
+        return service.submit(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                ContentValues values = new ContentValues();
+                values.put(ItemsTable.C_CHECKED, false);
+
+
+                return resolver.update(ShoppingProviderContract.ITEMS_URI, values,
+                        ItemsTable.C_LIST_ID + " = ?", new String[]{list.getId()+""});
+            }
+        });
+    }
 }
