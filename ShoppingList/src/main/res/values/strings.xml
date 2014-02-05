@@ -13,5 +13,9 @@
     <string name="new_item">new item</string>
     <string name="clear_list">clear list</string>
     <string name="new_item_name">new item</string>
+    <string name="title_activity_item_dialog">ItemDialogActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="accept_dialog_btn">ok</string>
+    <string name="cancel_dialog_btn">cancel</string>
 
 </resources>

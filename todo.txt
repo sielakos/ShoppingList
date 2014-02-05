@@ -1,5 +1,6 @@
-TODO: clear list action
-TODO: fix error with scrolling item list
+TODO: item dialog
+TODO: item dialog request handler
+TODO: item changed listener
 TODO: animations and styles
 TODO: think about other UI elements
 TODO: espresso tests

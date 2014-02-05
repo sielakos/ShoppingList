@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import net.sledzdev.shoppinglist.R;
 import net.sledzdev.shoppinglist.event.TextWatcherAdapter;
@@ -45,18 +46,14 @@ public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
             View main = getInflater().inflate(R.layout.shoping_item_element, parent, false);
 
             holder.main = main;
-            holder.itemName = (EditText) main.findViewById(R.id.item_name);
-            holder.price = (EditText) main.findViewById(R.id.item_price);
+            holder.itemName = (TextView) main.findViewById(R.id.item_name);
+            holder.price = (TextView) main.findViewById(R.id.item_price);
             holder.delete = (Button) main.findViewById(R.id.delete_item);
             holder.check = (CheckBox) main.findViewById(R.id.check_item);
 
             main.setTag(holder);
         }
         return holder;
-    }
-
-    private void addEvents(ShoppingItemHolder holder, final ShoppingItem item) {
-        itemAdapterEventController.addEvents(holder, item);
     }
 
     private void setValues(ShoppingItemHolder holder, ShoppingItem item) {
@@ -67,9 +64,9 @@ public class ItemAdapter extends DataModelAdapter<ShoppingItem> {
 
     public static class ShoppingItemHolder {
         public View main;
-        public EditText itemName;
+        public TextView itemName;
+        public TextView price;
         public Button delete;
         public CheckBox check;
-        public EditText price;
     }
 }

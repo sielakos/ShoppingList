@@ -9,4 +9,6 @@
 
     <dimen name="list_element_font_size">24sp</dimen>
     <dimen name="empty_list_string_size">40sp</dimen>
+    <dimen name="dialog_input_width">200dp</dimen>
+    <dimen name="dialog_btn_width">100dp</dimen>
 </resources>

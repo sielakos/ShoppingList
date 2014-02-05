@@ -19,14 +19,14 @@
         </provider>
 
         <activity
-            android:name=".ShoppingListsActivity"
+            android:name="net.sledzdev.shoppinglist.ShoppingListsActivity"
             android:label="@string/title_shoppinglist_list" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="net.sledzdev.shoppinglist.ShoppingListDetailActivity"
             android:label="@string/title_shoppinglist_detail"
@@ -34,6 +34,11 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ShoppingListListActivity" />
+        </activity>
+        <activity
+            android:name="net.sledzdev.shoppinglist.ItemDialogActivity"
+            android:label="@string/title_activity_item_dialog"
+            android:theme="@android:style/Theme.Holo.Dialog">
         </activity>
     </application>
 

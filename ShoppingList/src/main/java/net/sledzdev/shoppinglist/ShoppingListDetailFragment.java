@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.google.common.base.Optional;
@@ -25,12 +24,9 @@ import net.sledzdev.shoppinglist.event.ClearListEvent;
 import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.event.ListTitleChangedEvent;
 import net.sledzdev.shoppinglist.event.NewItemEvent;
-import net.sledzdev.shoppinglist.event.NewListEvent;
 import net.sledzdev.shoppinglist.event.TextWatcherAdapter;
 import net.sledzdev.shoppinglist.handlers.ClearListEventHandler;
 import net.sledzdev.shoppinglist.handlers.ItemCheckedChangeEventHandler;
-import net.sledzdev.shoppinglist.handlers.ItemNameChangedEventHandler;
-import net.sledzdev.shoppinglist.handlers.ItemPriceChangeEventHandler;
 import net.sledzdev.shoppinglist.handlers.ListTitleChangedEventHandler;
 import net.sledzdev.shoppinglist.handlers.NewItemEventHandler;
 import net.sledzdev.shoppinglist.manager.ContentManager;
@@ -57,8 +53,6 @@ public class ShoppingListDetailFragment extends Fragment {
     private void registerEventHandlers() {
         final EventBus eventBus = EventBusFactory.getEventBus();
         eventBus.register(new ListTitleChangedEventHandler());
-        eventBus.register(new ItemNameChangedEventHandler(manager));
-        eventBus.register(new ItemPriceChangeEventHandler(manager));
         eventBus.register(new ItemCheckedChangeEventHandler(manager));
         eventBus.register(new ClearListEventHandler(getActivity()));
         eventBus.register(new NewItemEventHandler(getActivity()));
