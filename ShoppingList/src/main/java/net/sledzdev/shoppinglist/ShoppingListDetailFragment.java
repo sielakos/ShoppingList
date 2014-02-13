@@ -25,10 +25,6 @@ import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.event.ListTitleChangedEvent;
 import net.sledzdev.shoppinglist.event.NewItemEvent;
 import net.sledzdev.shoppinglist.event.TextWatcherAdapter;
-import net.sledzdev.shoppinglist.handlers.ClearListEventHandler;
-import net.sledzdev.shoppinglist.handlers.ItemCheckedChangeEventHandler;
-import net.sledzdev.shoppinglist.handlers.ListTitleChangedEventHandler;
-import net.sledzdev.shoppinglist.handlers.NewItemEventHandler;
 import net.sledzdev.shoppinglist.manager.ContentManager;
 import net.sledzdev.shoppinglist.manager.OnUiThreadFutureCallback;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
@@ -36,6 +32,7 @@ import net.sledzdev.shoppinglist.model.ShoppingList;
 
 public class ShoppingListDetailFragment extends Fragment {
     public static final String LIST_ID = "shopping_list_id";
+    private final DetailFragmentHandlersRegister detailFragmentHandlersRegister = new DetailFragmentHandlersRegister(this);
 
     private ContentManager manager;
     private ItemAdapter currentItemAdapter;
@@ -47,15 +44,7 @@ public class ShoppingListDetailFragment extends Fragment {
 
         manager = ContentManager.createContentManager(activity);
 
-        registerEventHandlers();
-    }
-
-    private void registerEventHandlers() {
-        final EventBus eventBus = EventBusFactory.getEventBus();
-        eventBus.register(new ListTitleChangedEventHandler());
-        eventBus.register(new ItemCheckedChangeEventHandler(manager));
-        eventBus.register(new ClearListEventHandler(getActivity()));
-        eventBus.register(new NewItemEventHandler(getActivity()));
+        detailFragmentHandlersRegister.registerEventHandlers();
     }
 
     @Override
@@ -153,6 +142,14 @@ public class ShoppingListDetailFragment extends Fragment {
                 eventBus.post(new NewItemEvent(currentItemAdapter, list, manager));
            }
        });
+    }
+
+    public ContentManager getManager() {
+        return manager;
+    }
+
+    public ItemAdapter getCurrentItemAdapter() {
+        return currentItemAdapter;
     }
 
     private class ListDetailViews {

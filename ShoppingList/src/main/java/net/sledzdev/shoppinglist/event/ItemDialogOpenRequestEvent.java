@@ -1,5 +1,7 @@
 package net.sledzdev.shoppinglist.event;
 
+import android.util.Log;
+
 import net.sledzdev.shoppinglist.adapter.ItemAdapter;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
 

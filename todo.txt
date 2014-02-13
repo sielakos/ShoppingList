@@ -1,9 +1,13 @@
 TODO: item dialog
-TODO: item dialog request handler
-TODO: item changed listener
+TODO: find out why cancel button doesn't work properly
+TODO: fix issue with adding too many new items
+TODO: add bold to selected list in two-pane layout
+TODO: change dialog title
+TODO: take care of orientation change, detail activity and open dialog especially
 TODO: animations and styles
 TODO: think about other UI elements
 TODO: espresso tests
+TODO: test logic class like: RegisterManager
 TODO: minimize number of events
 TODO: reminder functionality
 TODO: translate to polish

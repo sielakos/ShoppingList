@@ -15,11 +15,14 @@ import com.google.common.eventbus.EventBus;
 
 import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.event.ItemChangedEvent;
+import net.sledzdev.shoppinglist.event.ItemDialogCloseEvent;
 import net.sledzdev.shoppinglist.model.ShoppingItem;
 
 public class ItemDialogActivity extends Activity {
 
     public final static String ITEM_ID_ARG = "item_id";
+    public final static String ITEM_NAME_ARG = "name";
+    public final static String ITEM_PRICE_ARG = "price";
 
     private EditText name;
     private EditText price;
@@ -36,6 +39,7 @@ public class ItemDialogActivity extends Activity {
         itemId = extras.getLong(ITEM_ID_ARG);
 
         findViews();
+        setValues(extras);
         setEvents();
     }
 
@@ -44,6 +48,11 @@ public class ItemDialogActivity extends Activity {
         price = (EditText) findViewById(R.id.item_price);
         ok = (Button) findViewById(R.id.ok_btn);
         cancel = (Button) findViewById(R.id.cancel_btn);
+    }
+
+    private void setValues(Bundle extras) {
+        name.setText(extras.getString(ITEM_NAME_ARG));
+        price.setText(extras.getDouble(ITEM_PRICE_ARG) + "");
     }
 
     private void setEvents() {
@@ -63,6 +72,12 @@ public class ItemDialogActivity extends Activity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void finish() {
+        EventBusFactory.getEventBus().post(new ItemDialogCloseEvent());
+        super.finish();
     }
 
     private double getPrice() {

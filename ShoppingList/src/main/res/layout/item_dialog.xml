@@ -11,29 +11,36 @@
     <EditText
         android:id="@+id/item_name"
         android:inputType="text"
-        android:layout_width="@dimen/dialog_input_width"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/item_price"
         android:layout_below="@id/item_name"
         android:inputType="numberDecimal"
-        android:layout_width="@dimen/dialog_input_width"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/ok_btn"
-        android:text="@string/accept_dialog_btn"
+    <LinearLayout
         android:layout_below="@id/item_price"
-        android:layout_width="@dimen/dialog_btn_width"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/cancel_btn"
-        android:text="@string/cancel_dialog_btn"
-        android:layout_below="@id/item_price"
-        android:layout_toRightOf="@id/ok_btn"
-        android:layout_width="@dimen/dialog_btn_width"
-        android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/ok_btn"
+            android:text="@string/accept_dialog_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/cancel_btn"
+            android:text="@string/cancel_dialog_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>
