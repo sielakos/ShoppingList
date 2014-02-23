@@ -1,5 +1,3 @@
-TODO: item dialog
-TODO: find out why cancel button doesn't work properly
 TODO: fix issue with adding too many new items
 TODO: add bold to selected list in two-pane layout
 TODO: change dialog title

@@ -43,7 +43,7 @@ class RegisterManager {
 
     public void register(String name, Object handler) {
         if (mapping.containsKey(name)) {
-            eventBus.unregister(mapping.get(handler));
+            eventBus.unregister(mapping.get(name));
         }
         eventBus.register(handler);
         mapping.put(name, handler);
