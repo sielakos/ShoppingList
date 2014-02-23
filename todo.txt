@@ -6,6 +6,8 @@ TODO: animations and styles
 TODO: think about other UI elements
 TODO: espresso tests
 TODO: test logic class like: RegisterManager
+TODO: add item weight and etc
 TODO: minimize number of events
 TODO: reminder functionality
 TODO: translate to polish
+TODO: neural network with autocomplete fields?
