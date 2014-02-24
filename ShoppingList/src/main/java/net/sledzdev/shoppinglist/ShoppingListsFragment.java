@@ -1,6 +1,7 @@
 package net.sledzdev.shoppinglist;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -10,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import net.sledzdev.shoppinglist.adapter.DataModel;
+import net.sledzdev.shoppinglist.adapter.ItemAdapter;
 import net.sledzdev.shoppinglist.adapter.ShoppingListsAdapter;
 import net.sledzdev.shoppinglist.event.EventBusFactory;
 import net.sledzdev.shoppinglist.event.ListSelectedEvent;
@@ -32,6 +36,7 @@ public class ShoppingListsFragment extends ListFragment {
     private int mActivatedPosition = ListView.INVALID_POSITION;
     private ContentManager contentManager;
     private Button newListBtn;
+    private Optional<View> lastClickedItem = Optional.absent();
 
     public ShoppingListsFragment() {
     }
@@ -98,6 +103,27 @@ public class ShoppingListsFragment extends ListFragment {
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
         EventBusFactory.getEventBus().post(new ListSelectedEvent(id));
+
+        boldSelectedView(listView, view, id);
+
+        lastClickedItem = Optional.of(view);
+    }
+
+    private void boldSelectedView(ListView listView, View view, long id) {
+        if (listView.getChoiceMode() == ListView.CHOICE_MODE_SINGLE) {
+            if (lastClickedItem.isPresent()) {
+                ShoppingListsAdapter.ShoppingListHolder lastClickedHolder = getListHolder(lastClickedItem.get());
+                lastClickedHolder.listName.setTypeface(null, Typeface.NORMAL);
+            }
+
+            ShoppingListsAdapter.ShoppingListHolder holder = getListHolder(view);
+            holder.listName.setTypeface(null, Typeface.BOLD);
+            ((ShoppingListsAdapter)listView.getAdapter()).setSelectedId(id);
+        }
+    }
+
+    private ShoppingListsAdapter.ShoppingListHolder getListHolder(View view) {
+        return (ShoppingListsAdapter.ShoppingListHolder) view.getTag();
     }
 
     @Override
@@ -118,6 +144,7 @@ public class ShoppingListsFragment extends ListFragment {
     }
 
     private void setActivatedPosition(int position) {
+
         if (position == ListView.INVALID_POSITION) {
             getListView().setItemChecked(mActivatedPosition, false);
         } else {
@@ -126,5 +153,6 @@ public class ShoppingListsFragment extends ListFragment {
 
         mActivatedPosition = position;
     }
+
 
 }

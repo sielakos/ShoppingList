@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -42,7 +41,7 @@ public class ListSelectedEventHandler {
                     .replace(R.id.shoppinglist_detail_container, fragment)
                     .commit();
 
-            animate();
+            animateEmptyViewFadeOut();
         } else {
             Intent detailIntent = new Intent(shoppingListsActivity, ShoppingListDetailActivity.class);
             detailIntent.putExtras(arguments);
@@ -50,7 +49,7 @@ public class ListSelectedEventHandler {
         }
     }
 
-    private void animate() {
+    private void animateEmptyViewFadeOut() {
         if (emptyView == null) {
             emptyView = shoppingListsActivity.findViewById(R.id.empty_list);
             shoppingFragment = shoppingListsActivity.findViewById(R.id.shoppping_fragment);

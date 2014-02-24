@@ -1,11 +1,13 @@
 package net.sledzdev.shoppinglist.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 
 import net.sledzdev.shoppinglist.R;
@@ -19,6 +21,7 @@ import net.sledzdev.shoppinglist.model.ShoppingList;
 public class ShoppingListsAdapter extends DataModelAdapter<ShoppingList> {
 
     private final EventBus eventBus;
+    private long selectedId = -10020;
 
     public ShoppingListsAdapter(Context context, DataModel<ShoppingList> model) {
         super(context, model);
@@ -40,6 +43,12 @@ public class ShoppingListsAdapter extends DataModelAdapter<ShoppingList> {
         setListeners(holder, list);
 
         holder.listName.setText(list.name);
+
+        if (list.getId() == selectedId) {
+            holder.listName.setTypeface(null, Typeface.BOLD);
+        } else {
+            holder.listName.setTypeface(null, Typeface.NORMAL);
+        }
 
         return holder.main;
     }
@@ -74,4 +83,11 @@ public class ShoppingListsAdapter extends DataModelAdapter<ShoppingList> {
         public View main;
     }
 
+    public long getSelectedId() {
+        return selectedId;
+    }
+
+    public void setSelectedId(long selectedId) {
+        this.selectedId = selectedId;
+    }
 }

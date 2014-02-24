@@ -38,7 +38,7 @@
         <activity
             android:name="net.sledzdev.shoppinglist.ItemDialogActivity"
             android:label="@string/title_activity_item_dialog"
-            android:theme="@android:style/Theme.Holo.Dialog">
+            android:theme="@style/ShoppingDialogTheme">
         </activity>
     </application>
 

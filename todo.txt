@@ -1,7 +1,5 @@
-TODO: fix issue with adding too many new items
-TODO: add bold to selected list in two-pane layout
-TODO: change dialog title
 TODO: take care of orientation change, detail activity and open dialog especially
+TODO: unregister handlers after screen rotation
 TODO: animations and styles
 TODO: think about other UI elements
 TODO: espresso tests
