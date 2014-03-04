@@ -1,5 +1,5 @@
+TODO: many new lists are created on app start
 TODO: take care of orientation change, detail activity and open dialog especially
-TODO: unregister handlers after screen rotation
 TODO: animations and styles
 TODO: think about other UI elements
 TODO: espresso tests

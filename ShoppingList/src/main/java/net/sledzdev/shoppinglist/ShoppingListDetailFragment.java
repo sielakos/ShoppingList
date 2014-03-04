@@ -57,6 +57,12 @@ public class ShoppingListDetailFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        detailFragmentHandlersRegister.unregisterAll();
+    }
+
     private void initViews(final View rootView) {
         Futures.addCallback(initList(), new FutureCallback<Optional<ShoppingList>>() {
             @Override

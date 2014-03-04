@@ -24,8 +24,6 @@ import net.sledzdev.shoppinglist.manager.ContentManager;
  */
 public class ShoppingListDetailActivity extends FragmentActivity {
 
-    ContentManager contentManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,10 +31,6 @@ public class ShoppingListDetailActivity extends FragmentActivity {
 
         // Show the Up button in the action bar.
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        contentManager = ContentManager.createContentManager(this);
-
-        registerListeners();
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
@@ -50,11 +44,6 @@ public class ShoppingListDetailActivity extends FragmentActivity {
         }
     }
 
-    private void registerListeners() {
-        EventBus eventBus = EventBusFactory.getEventBus();
-        eventBus.register(new ItemDeleteEventHandler(contentManager));
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -63,9 +52,5 @@ public class ShoppingListDetailActivity extends FragmentActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public ContentManager getContentManager() {
-        return contentManager;
     }
 }
