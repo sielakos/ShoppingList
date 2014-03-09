@@ -26,7 +26,7 @@ public class ListSelectedEventHandler {
     }
 
     @Subscribe
-    public void onItemSelected(ListSelectedEvent event) {
+    public void onListSelected(ListSelectedEvent event) {
         long id = event.selectId;
 
         shoppingListsActivity.setCurrentListId(id);
